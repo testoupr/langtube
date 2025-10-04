@@ -1,5 +1,6 @@
 # ClipLingo AI API Setup Guide
 
+
 ClipLingo now uses AI to generate summaries and quizzes! This guide will help you configure your AI provider.
 
 ## Quick Start
