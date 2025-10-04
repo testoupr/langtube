@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Transcript Extractor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header section -->
+        <header class="header">
+            <h1>YouTube Transcript Extractor</h1>
+            <p>Extract transcripts from YouTube videos easily</p>
+        </header>
+
+        <!-- Main content area -->
+        <main class="main-content">
+            <!-- Input form -->
+            <form id="urlForm" class="url-form">
+                <div class="input-group">
+                    <label for="youtubeUrl" class="input-label">YouTube Video URL:</label>
+                    <input 
+                        type="url" 
+                        id="youtubeUrl" 
+                        name="youtubeUrl" 
+                        placeholder="https://www.youtube.com/watch?v=..." 
+                        required
+                        class="url-input"
+                    >
+                    <button type="submit" class="extract-btn" id="extractBtn">
+                        Extract Transcript
+                    </button>
+                </div>
+            </form>
+
+            <!-- Loading indicator -->
+            <div id="loadingIndicator" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Extracting transcript...</p>
+            </div>
+
+            <!-- Results section -->
+            <div id="resultsSection" class="results hidden">
+                <div class="results-header">
+                    <h2>Transcript Extracted Successfully!</h2>
+                </div>
+                <div class="success-message">
+                    <p>The transcript has been extracted and stored.</p>
+                    <p>Check the browser console to see the transcript data.</p>
+                </div>
+            </div>
+
+            <!-- Error message -->
+            <div id="errorMessage" class="error hidden">
+                <p id="errorText"></p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 YouTube Transcript Extractor</p>
+        </footer>
+    </div>
+
+    <!-- Include JavaScript modules -->
+    <script src="transcriptExtractor.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
