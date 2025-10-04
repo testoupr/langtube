@@ -1,0 +1,33 @@
+Sample YouTube Transcript - How to Learn Programming
+
+0:00 Welcome to this video about learning programming.
+0:15 Programming is a valuable skill in today's digital world.
+0:30 There are many programming languages to choose from, including Python, JavaScript, and Java.
+0:45 Python is particularly popular for beginners because it has simple syntax and is easy to read.
+1:00 JavaScript is the language of the web and runs in every browser.
+1:15 When learning to program, it's important to practice regularly and build projects.
+1:30 Start with small projects like calculators or to-do lists before moving to larger applications.
+1:45 Reading other people's code is an excellent way to learn new techniques and best practices.
+2:00 Don't be afraid to make mistakes - debugging is a crucial part of learning.
+2:15 Online communities like Stack Overflow can help when you get stuck.
+2:30 Consistency is more important than intensity when learning programming.
+2:45 Even fifteen minutes of practice each day can lead to significant progress over time.
+3:00 Focus on understanding concepts rather than memorizing syntax.
+3:15 Modern integrated development environments provide helpful features like code completion and error detection.
+3:30 Version control systems like Git help you track changes and collaborate with others.
+3:45 Learning data structures and algorithms will make you a better problem solver.
+4:00 Object-oriented programming is a fundamental paradigm used in many languages.
+4:15 Functional programming offers different approaches to solving problems.
+4:30 Testing your code ensures it works correctly and prevents bugs.
+4:45 Documentation helps others understand your code and helps you remember what you did.
+5:00 Keep learning and stay curious about new technologies and techniques.
+5:15 Remember that every expert programmer was once a beginner just like you.
+5:30 Thank you for watching, and good luck on your programming journey!
+
+---
+
+Instructions for use:
+1. Copy the text above (timestamps will be cleaned automatically)
+2. Paste into ClipLingo's "Paste Transcript Manually" field
+3. Click "Process Transcript"
+
