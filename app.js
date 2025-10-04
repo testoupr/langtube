@@ -34,6 +34,10 @@ const API_CONFIG = {
     
     // Option 4: Custom endpoint (serverless function, backend API)
     customEndpoint: '/api/process-transcript',
+    
+    // Option 5: Supadata API (for multi-platform transcripts & translation)
+    supadataKey: 'sd_a7ec43f23cd8652aeee773706121bb25', // Get from dash.supadata.ai
+    useSupadataForTranscripts: true, // Set to true to use Supadata for transcript fetching
 };
 
 // ============================================================================
@@ -686,10 +690,137 @@ async function callCustomAPI(transcript) {
 /**
  * Fetch transcript from serverless endpoint (stub with fallback)
  */
-async function fetchTranscript(videoId) {
-    // Stub implementation - in production, this would call a real API
-    // For now, we'll simulate an API call and return an error to trigger fallback
+/**
+ * Fetch transcript using Supadata API
+ * Supports translation to different languages
+ */
+async function fetchTranscriptWithSupadata(videoId, targetLang = null) {
+    if (!API_CONFIG.supadataKey || API_CONFIG.supadataKey === 'YOUR_SUPADATA_API_KEY') {
+        throw new Error('Supadata API key not configured. Please add your API key in app.js');
+    }
     
+    try {
+        const url = `https://www.youtube.com/watch?v=${videoId}`;
+        
+        // If translation is requested, use the translate endpoint
+        if (targetLang && targetLang !== '') {
+            console.log(`Fetching and translating transcript to ${targetLang}...`);
+            
+            const response = await fetch('https://api.supadata.ai/v1/youtube/translate', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_CONFIG.supadataKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    videoId: videoId,
+                    lang: targetLang,
+                }),
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Translation failed: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            
+            // Convert timestamped chunks to plain text
+            if (Array.isArray(data.transcript)) {
+                return data.transcript.map(chunk => chunk.text).join(' ');
+            } else if (typeof data.transcript === 'string') {
+                return data.transcript;
+            }
+            
+            throw new Error('Unexpected transcript format from Supadata');
+            
+        } else {
+            // Fetch transcript without translation
+            console.log('Fetching transcript...');
+            
+            const response = await fetch('https://api.supadata.ai/v1/transcript', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_CONFIG.supadataKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: url,
+                    text: true, // Get plain text instead of timestamped chunks
+                    mode: 'auto', // Use auto mode for best results
+                }),
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Transcript fetch failed: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            
+            // Handle both direct transcript and job-based responses
+            if (data.jobId) {
+                // For large files, poll for results
+                return await pollSupadataJob(data.jobId);
+            } else if (data.transcript) {
+                return data.transcript;
+            } else if (typeof data === 'string') {
+                return data;
+            }
+            
+            throw new Error('Unexpected response format from Supadata');
+        }
+        
+    } catch (error) {
+        console.error('Supadata API error:', error);
+        throw error;
+    }
+}
+
+/**
+ * Poll Supadata job status for async transcript processing
+ */
+async function pollSupadataJob(jobId, maxAttempts = 30) {
+    for (let i = 0; i < maxAttempts; i++) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+        
+        try {
+            const response = await fetch(`https://api.supadata.ai/v1/transcript/job/${jobId}`, {
+                headers: {
+                    'Authorization': `Bearer ${API_CONFIG.supadataKey}`,
+                },
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to check job status');
+            }
+            
+            const result = await response.json();
+            
+            if (result.status === 'completed') {
+                return result.content || result.transcript;
+            } else if (result.status === 'failed') {
+                throw new Error(`Job failed: ${result.error || 'Unknown error'}`);
+            }
+            
+            console.log(`Job status: ${result.status}... (attempt ${i + 1}/${maxAttempts})`);
+            
+        } catch (error) {
+            console.error('Error polling job:', error);
+            throw error;
+        }
+    }
+    
+    throw new Error('Transcript processing timed out');
+}
+
+async function fetchTranscript(videoId, targetLang = null) {
+    // Check if Supadata should be used
+    if (API_CONFIG.useSupadataForTranscripts || targetLang) {
+        return await fetchTranscriptWithSupadata(videoId, targetLang);
+    }
+    
+    // Fallback: Stub implementation
     try {
         // Simulate API endpoint
         const apiEndpoint = `/api/transcript/${videoId}`;
@@ -698,13 +829,7 @@ async function fetchTranscript(videoId) {
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         // For demo purposes, throw an error to demonstrate fallback
-        throw new Error('Transcript fetching not available. Please paste transcript manually.');
-        
-        // In production, you would:
-        // const response = await fetch(apiEndpoint);
-        // if (!response.ok) throw new Error('Failed to fetch transcript');
-        // const data = await response.json();
-        // return data.transcript;
+        throw new Error('Transcript fetching not available. Please paste transcript manually or enable Supadata in API_CONFIG.');
         
     } catch (error) {
         throw error;
@@ -721,6 +846,8 @@ async function fetchTranscript(videoId) {
 async function handleFetchTranscript() {
     const urlInput = document.getElementById('youtube-url');
     const url = urlInput.value.trim();
+    const targetLangSelect = document.getElementById('target-language');
+    const targetLang = targetLangSelect ? targetLangSelect.value : null;
     
     hideError('url-error');
     
@@ -742,15 +869,23 @@ async function handleFetchTranscript() {
     const spinner = btn.querySelector('.spinner');
     
     btn.disabled = true;
-    btnText.textContent = 'Fetching...';
+    const originalText = btnText.textContent;
+    btnText.textContent = targetLang ? 'Fetching & Translating...' : 'Fetching...';
     spinner.classList.remove('hidden');
     
     try {
         state.videoId = videoId;
         state.videoUrl = url;
         
-        const transcript = await fetchTranscript(videoId);
+        // Fetch transcript with optional translation
+        const transcript = await fetchTranscript(videoId, targetLang);
         state.rawTranscript = transcript;
+        
+        // Add language info to state if translated
+        if (targetLang) {
+            state.translatedTo = targetLang;
+            console.log(`Transcript translated to: ${targetLang}`);
+        }
         
         // Process the transcript
         processTranscript();
@@ -766,7 +901,7 @@ async function handleFetchTranscript() {
         
     } finally {
         btn.disabled = false;
-        btnText.textContent = 'Fetch Transcript';
+        btnText.textContent = originalText;
         spinner.classList.add('hidden');
     }
 }
