@@ -1,14 +1,20 @@
 # ClipLingo 🎬
 
-Transform YouTube videos into interactive learning experiences with automatic summarization and quiz generation.
+Transform YouTube videos into interactive language learning experiences with automatic summarization and multilingual quiz generation.
 
 ## Features
+
+🌍 **Language Learning**
+- **15+ Languages Supported**: English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Dutch, Polish, Turkish
+- **Dual Language Selection**: Choose video language (source) and quiz language (target)
+- **Learn Any Language**: Watch videos in one language, get quizzes in another
+- **Perfect for Language Learners**: Ideal for immersion and comprehension practice
 
 ✨ **YouTube Integration**
 - Paste any YouTube URL to automatically fetch transcripts
 - Powered by Supadata API for real transcript fetching
 - Extract video ID from various URL formats
-- Supports auto-generated and manual captions
+- Supports auto-generated and manual captions in multiple languages
 
 📝 **Manual Transcript Fallback**
 - Paste transcripts directly (from YouTube's "Show transcript" feature)
@@ -101,31 +107,38 @@ Open http://localhost:8000 in your browser.
 
 1. **Good news: All APIs are configured!** Just start using the app immediately.
 
-2. **Choose Input Method:**
+2. **Select Your Languages:**
+   - **Video Language**: Choose the language of the YouTube video captions
+   - **Quiz Language**: Choose the language you want to practice/learn with
+   - Example: Watch Spanish video → Get quiz in English (comprehension)
+   - Example: Watch English video → Get quiz in Spanish (language practice)
+
+3. **Choose Input Method:**
    - **Option A**: Paste a YouTube URL and click "Fetch Transcript" ⭐ **Now fully functional!**
    - **Option B**: Paste a transcript manually (backup option)
 
-3. **Get Transcript from YouTube:**
+4. **Get Transcript from YouTube:**
    - Go to any YouTube video
    - Click the "..." menu below the video
    - Click "Show transcript"
    - Copy all the text (timestamps will be cleaned automatically)
    - Paste into ClipLingo's manual transcript field
 
-4. **View Summary:**
-   - Read the auto-generated key points
+5. **View Summary:**
+   - Read the auto-generated key points (in your selected quiz language)
    - Click "View Full Transcript" to see cleaned version
    - Click "Start Quiz" when ready
 
-5. **Take the Quiz:**
+6. **Take the Quiz:**
    - Answer 5 questions (3 multiple choice, 2 fill-in-blank)
    - Get immediate feedback with explanations
    - View your score and detailed results
 
-6. **Track Progress:**
+7. **Track Progress:**
    - Previous attempts are saved automatically
    - Compare scores over time
    - Retake quiz with shuffled questions
+   - Practice the same content in different languages
 
 ## Technical Details
 
@@ -236,6 +249,22 @@ MIT License - Feel free to use, modify, and distribute!
 ## Credits
 
 Built with ❤️ for better learning experiences.
+
+---
+
+## Language Learning Use Cases
+
+### 📚 For Language Learners:
+- **Comprehension Practice**: Watch foreign language videos → Get quizzes in your native language
+- **Production Practice**: Watch native language videos → Get quizzes in your target language
+- **Immersion Mode**: Watch target language → Quiz in target language for full immersion
+- **Vocabulary Building**: Learn new words and phrases in context
+
+### 🎯 Example Scenarios:
+1. **Spanish Learner**: Watch Spanish cooking video → Quiz in English to test comprehension
+2. **English Practice**: Watch English TED talk → Quiz in Spanish to practice expressing ideas
+3. **French Immersion**: Watch French documentary → Quiz in French for advanced practice
+4. **Multi-Language**: Use the same video with different quiz languages to compare understanding
 
 ---
 

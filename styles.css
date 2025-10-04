@@ -181,6 +181,51 @@ textarea {
     cursor: not-allowed;
 }
 
+/* Language Selection */
+.language-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: var(--radius-md);
+    border: 2px solid #bae6fd;
+}
+
+.language-group {
+    margin-bottom: 0;
+}
+
+.language-selection select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: white;
+    font-size: 1rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.language-selection select:hover {
+    border-color: var(--primary-color);
+}
+
+.language-selection select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Mobile responsive language selection */
+@media (max-width: 640px) {
+    .language-selection {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Divider */
 .divider {
     display: flex;

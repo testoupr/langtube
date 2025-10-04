@@ -13,6 +13,8 @@ const state = {
     currentQuestionIndex: 0,
     answers: [],
     score: 0,
+    sourceLanguage: 'en',  // Language of the video
+    targetLanguage: 'en',  // Language for quiz/summary
 };
 
 // API Configuration
@@ -422,6 +424,19 @@ async function processWithAI(cleanedTranscript) {
  * Call OpenAI API
  */
 async function callOpenAI(transcript) {
+    const languageNames = {
+        'en': 'English', 'es': 'Spanish', 'fr': 'French', 'de': 'German',
+        'it': 'Italian', 'pt': 'Portuguese', 'ru': 'Russian', 'ja': 'Japanese',
+        'ko': 'Korean', 'zh': 'Chinese', 'ar': 'Arabic', 'hi': 'Hindi',
+        'nl': 'Dutch', 'pl': 'Polish', 'tr': 'Turkish'
+    };
+    
+    const targetLang = state.targetLanguage || 'en';
+    const targetLangName = languageNames[targetLang] || 'English';
+    
+    // ALWAYS provide explicit language instruction
+    const languageInstruction = `\n\nIMPORTANT: You MUST generate ALL content (summary points, questions, options, and explanations) in ${targetLangName}. The transcript may be in a different language, but your output must be in ${targetLangName}. This is for language learning purposes.`;
+    
     const prompt = `You are an educational content analyzer. Analyze the following video transcript and provide:
 
 1. A summary with 5 key points (as an array of strings)
@@ -441,7 +456,7 @@ Return ONLY valid JSON in this exact format:
   ]
 }
 
-Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.
+Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
 
 Transcript:
 ${transcript}`;
@@ -483,6 +498,19 @@ ${transcript}`;
  * Call Claude API
  */
 async function callClaude(transcript) {
+    const languageNames = {
+        'en': 'English', 'es': 'Spanish', 'fr': 'French', 'de': 'German',
+        'it': 'Italian', 'pt': 'Portuguese', 'ru': 'Russian', 'ja': 'Japanese',
+        'ko': 'Korean', 'zh': 'Chinese', 'ar': 'Arabic', 'hi': 'Hindi',
+        'nl': 'Dutch', 'pl': 'Polish', 'tr': 'Turkish'
+    };
+    
+    const targetLang = state.targetLanguage || 'en';
+    const targetLangName = languageNames[targetLang] || 'English';
+    
+    // ALWAYS provide explicit language instruction
+    const languageInstruction = `\n\nIMPORTANT: You MUST generate ALL content (summary points, questions, options, and explanations) in ${targetLangName}. The transcript may be in a different language, but your output must be in ${targetLangName}. This is for language learning purposes.`;
+    
     const prompt = `You are an educational content analyzer. Analyze the following video transcript and provide:
 
 1. A summary with 5 key points (as an array of strings)
@@ -502,7 +530,7 @@ Return ONLY valid JSON in this exact format:
   ]
 }
 
-Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.
+Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
 
 Transcript:
 ${transcript}`;
@@ -545,6 +573,31 @@ ${transcript}`;
  * Call Google Gemini API
  */
 async function callGemini(transcript) {
+    // Get language mapping for human-readable names
+    const languageNames = {
+        'en': 'English',
+        'es': 'Spanish',
+        'fr': 'French',
+        'de': 'German',
+        'it': 'Italian',
+        'pt': 'Portuguese',
+        'ru': 'Russian',
+        'ja': 'Japanese',
+        'ko': 'Korean',
+        'zh': 'Chinese',
+        'ar': 'Arabic',
+        'hi': 'Hindi',
+        'nl': 'Dutch',
+        'pl': 'Polish',
+        'tr': 'Turkish'
+    };
+    
+    const targetLang = state.targetLanguage || 'en';
+    const targetLangName = languageNames[targetLang] || 'English';
+    
+    // ALWAYS provide explicit language instruction, even for English
+    const languageInstruction = `\n\nIMPORTANT: You MUST generate ALL content (summary points, questions, options, and explanations) in ${targetLangName}. The transcript may be in a different language, but your output must be in ${targetLangName}. This is for language learning purposes.`;
+    
     const prompt = `You are an educational content analyzer. Analyze the following video transcript and provide:
 
 1. A summary with 5 key points (as an array of strings)
@@ -564,7 +617,7 @@ Return ONLY valid JSON in this exact format:
   ]
 }
 
-Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.
+Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
 
 Transcript:
 ${transcript}`;
@@ -694,10 +747,13 @@ async function fetchTranscript(videoId) {
         // Construct YouTube URL from video ID
         const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
         
-        // Call Supadata API - uses GET method with query parameters
-        const apiUrl = `https://api.supadata.ai/v1/youtube/transcript?url=${encodeURIComponent(youtubeUrl)}`;
+        // Get selected source language from dropdown
+        const lang = state.sourceLanguage || 'en';
         
-        console.log('Fetching transcript from:', apiUrl);
+        // Call Supadata API - uses GET method with query parameters
+        const apiUrl = `https://api.supadata.ai/v1/youtube/transcript?url=${encodeURIComponent(youtubeUrl)}&lang=${lang}`;
+        
+        console.log('Fetching transcript from:', apiUrl, 'Language:', lang);
         
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -1281,6 +1337,7 @@ function handleNewVideo() {
     state.currentQuestionIndex = 0;
     state.answers = [];
     state.score = 0;
+    // Keep language selections - don't reset them
     
     // Clear inputs
     document.getElementById('youtube-url').value = '';
@@ -1297,6 +1354,24 @@ function handleNewVideo() {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded - attaching event listeners...');
+    
+    // Language selection dropdowns
+    const sourceLanguageSelect = document.getElementById('source-language');
+    const targetLanguageSelect = document.getElementById('target-language');
+    
+    if (sourceLanguageSelect) {
+        sourceLanguageSelect.addEventListener('change', (e) => {
+            state.sourceLanguage = e.target.value;
+            console.log('Source language changed to:', state.sourceLanguage);
+        });
+    }
+    
+    if (targetLanguageSelect) {
+        targetLanguageSelect.addEventListener('change', (e) => {
+            state.targetLanguage = e.target.value;
+            console.log('Target language changed to:', state.targetLanguage);
+        });
+    }
     
     // Fetch transcript button
     const fetchBtn = document.getElementById('fetch-transcript-btn');
