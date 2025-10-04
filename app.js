@@ -747,13 +747,11 @@ async function fetchTranscript(videoId) {
         // Construct YouTube URL from video ID
         const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
         
-        // Get selected source language from dropdown
-        const lang = state.sourceLanguage || 'en';
-        
         // Call Supadata API - uses GET method with query parameters
-        const apiUrl = `https://api.supadata.ai/v1/youtube/transcript?url=${encodeURIComponent(youtubeUrl)}&lang=${lang}`;
+        // API auto-detects available captions/language
+        const apiUrl = `https://api.supadata.ai/v1/youtube/transcript?url=${encodeURIComponent(youtubeUrl)}`;
         
-        console.log('Fetching transcript from:', apiUrl, 'Language:', lang);
+        console.log('Fetching transcript from:', apiUrl);
         
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -1355,21 +1353,13 @@ function handleNewVideo() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded - attaching event listeners...');
     
-    // Language selection dropdowns
-    const sourceLanguageSelect = document.getElementById('source-language');
+    // Language selection for quiz/summary output
     const targetLanguageSelect = document.getElementById('target-language');
-    
-    if (sourceLanguageSelect) {
-        sourceLanguageSelect.addEventListener('change', (e) => {
-            state.sourceLanguage = e.target.value;
-            console.log('Source language changed to:', state.sourceLanguage);
-        });
-    }
     
     if (targetLanguageSelect) {
         targetLanguageSelect.addEventListener('change', (e) => {
             state.targetLanguage = e.target.value;
-            console.log('Target language changed to:', state.targetLanguage);
+            console.log('Quiz language changed to:', state.targetLanguage);
         });
     }
     

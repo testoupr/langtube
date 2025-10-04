@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClipLingo - Learn from YouTube Videos</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎬</text></svg>">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -36,28 +37,11 @@
 
                 <!-- Language Selection -->
                 <div class="language-selection">
-                    <div class="input-group language-group">
-                        <label for="source-language">Video Language</label>
-                        <select id="source-language" aria-label="Select video language">
-                            <option value="en">English</option>
-                            <option value="es">Spanish (Español)</option>
-                            <option value="fr">French (Français)</option>
-                            <option value="de">German (Deutsch)</option>
-                            <option value="it">Italian (Italiano)</option>
-                            <option value="pt">Portuguese (Português)</option>
-                            <option value="ru">Russian (Русский)</option>
-                            <option value="ja">Japanese (日本語)</option>
-                            <option value="ko">Korean (한국어)</option>
-                            <option value="zh">Chinese (中文)</option>
-                            <option value="ar">Arabic (العربية)</option>
-                            <option value="hi">Hindi (हिन्दी)</option>
-                            <option value="nl">Dutch (Nederlands)</option>
-                            <option value="pl">Polish (Polski)</option>
-                            <option value="tr">Turkish (Türkçe)</option>
-                        </select>
-                    </div>
-                    <div class="input-group language-group">
-                        <label for="target-language">Quiz Language</label>
+                    <div class="input-group language-group-single">
+                        <label for="target-language">
+                            <span class="label-main">Quiz & Summary Language</span>
+                            <span class="label-hint">Choose the language for questions and summaries</span>
+                        </label>
                         <select id="target-language" aria-label="Select quiz language">
                             <option value="en">English</option>
                             <option value="es">Spanish (Español)</option>

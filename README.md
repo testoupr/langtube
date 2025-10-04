@@ -6,8 +6,8 @@ Transform YouTube videos into interactive language learning experiences with aut
 
 🌍 **Language Learning**
 - **15+ Languages Supported**: English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Dutch, Polish, Turkish
-- **Dual Language Selection**: Choose video language (source) and quiz language (target)
-- **Learn Any Language**: Watch videos in one language, get quizzes in another
+- **Smart Language Selection**: Auto-detects video captions, choose your quiz language
+- **Learn Any Language**: Watch videos in any language, get quizzes in your preferred language
 - **Perfect for Language Learners**: Ideal for immersion and comprehension practice
 
 ✨ **YouTube Integration**
@@ -107,11 +107,11 @@ Open http://localhost:8000 in your browser.
 
 1. **Good news: All APIs are configured!** Just start using the app immediately.
 
-2. **Select Your Languages:**
-   - **Video Language**: Choose the language of the YouTube video captions
-   - **Quiz Language**: Choose the language you want to practice/learn with
-   - Example: Watch Spanish video → Get quiz in English (comprehension)
-   - Example: Watch English video → Get quiz in Spanish (language practice)
+2. **Select Your Quiz Language:**
+   - Choose the language for quizzes and summaries (video language is auto-detected)
+   - Example: Spanish video → English quiz (test comprehension)
+   - Example: English video → Spanish quiz (practice Spanish)
+   - Example: French video → French quiz (full immersion)
 
 3. **Choose Input Method:**
    - **Option A**: Paste a YouTube URL and click "Fetch Transcript" ⭐ **Now fully functional!**
@@ -255,15 +255,16 @@ Built with ❤️ for better learning experiences.
 ## Language Learning Use Cases
 
 ### 📚 For Language Learners:
-- **Comprehension Practice**: Watch foreign language videos → Get quizzes in your native language
-- **Production Practice**: Watch native language videos → Get quizzes in your target language
-- **Immersion Mode**: Watch target language → Quiz in target language for full immersion
+- **Comprehension Practice**: Watch foreign language videos → Quiz in your native language
+- **Production Practice**: Watch any video → Quiz in your target language
+- **Immersion Mode**: Watch and quiz in the same language for full immersion
 - **Vocabulary Building**: Learn new words and phrases in context
+- **Auto-Detection**: No need to specify video language - captions are automatically detected
 
 ### 🎯 Example Scenarios:
-1. **Spanish Learner**: Watch Spanish cooking video → Quiz in English to test comprehension
-2. **English Practice**: Watch English TED talk → Quiz in Spanish to practice expressing ideas
-3. **French Immersion**: Watch French documentary → Quiz in French for advanced practice
+1. **Spanish Learner**: Watch Spanish cooking video → Set quiz to English (test comprehension)
+2. **English Practice**: Watch English TED talk → Set quiz to Spanish (practice Spanish)
+3. **French Immersion**: Watch French documentary → Set quiz to French (advanced practice)
 4. **Multi-Language**: Use the same video with different quiz languages to compare understanding
 
 ---

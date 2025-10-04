@@ -183,9 +183,6 @@ textarea {
 
 /* Language Selection */
 .language-selection {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
     margin: 1.5rem 0;
     padding: 1.5rem;
     background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -193,8 +190,25 @@ textarea {
     border: 2px solid #bae6fd;
 }
 
-.language-group {
+.language-group-single {
     margin-bottom: 0;
+}
+
+.language-group-single label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.label-main {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.label-hint {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-secondary);
 }
 
 .language-selection select {
@@ -222,7 +236,7 @@ textarea {
 /* Mobile responsive language selection */
 @media (max-width: 640px) {
     .language-selection {
-        grid-template-columns: 1fr;
+        padding: 1rem;
     }
 }
 
