@@ -22,21 +22,11 @@ const API_CONFIG = {
     // Choose provider: 'openai', 'claude', 'gemini', or 'custom'
     provider: 'gemini',
     
-    // Option 1: OpenAI API
-    openaiKey: 'YOUR_OPENAI_API_KEY',
-    openaiModel: 'gpt-4o-mini',
-    
-    // Option 2: Claude API
-    claudeKey: 'YOUR_CLAUDE_API_KEY',
-    claudeModel: 'claude-3-5-sonnet-20241022',
-    
-    // Option 3: Google Gemini API
+    // Google Gemini API
     geminiKey: 'AIzaSyAmN-UQj8OooKWUvEELTDVU6g7TiL0kNGA',
     geminiModel: 'gemini-2.5-flash', // Stable version - or try 'gemini-flash-latest'
     
-    // Option 4: Custom endpoint (serverless function, backend API)
-    customEndpoint: '/api/process-transcript',
-    
+
     // Supadata API for YouTube transcripts
     supadataKey: 'sd_a7ec43f23cd8652aeee773706121bb25',
 };
@@ -421,155 +411,6 @@ async function processWithAI(cleanedTranscript) {
 }
 
 /**
- * Call OpenAI API
- */
-async function callOpenAI(transcript) {
-    const languageNames = {
-        'en': 'English', 'es': 'Spanish', 'fr': 'French', 'de': 'German',
-        'it': 'Italian', 'pt': 'Portuguese', 'ru': 'Russian', 'ja': 'Japanese',
-        'ko': 'Korean', 'zh': 'Chinese', 'ar': 'Arabic', 'hi': 'Hindi',
-        'nl': 'Dutch', 'pl': 'Polish', 'tr': 'Turkish'
-    };
-    
-    const targetLang = state.targetLanguage || 'en';
-    const targetLangName = languageNames[targetLang] || 'English';
-    
-    // ALWAYS provide explicit language instruction
-    const languageInstruction = `\n\nIMPORTANT: You MUST generate ALL content (summary points, questions, options, and explanations) in ${targetLangName}. The transcript may be in a different language, but your output must be in ${targetLangName}. This is for language learning purposes.`;
-    
-    const prompt = `You are an educational content analyzer. Analyze the following video transcript and provide:
-
-1. A summary with 5 key points (as an array of strings)
-2. A quiz with exactly 5 multiple choice questions (each with 4 options)
-
-Return ONLY valid JSON in this exact format:
-{
-  "summary": ["point 1", "point 2", "point 3", "point 4", "point 5"],
-  "quiz": [
-    {
-      "type": "multiple-choice",
-      "question": "question text",
-      "options": ["option A", "option B", "option C", "option D"],
-      "correctAnswer": 0,
-      "explanation": "why this is correct"
-    }
-  ]
-}
-
-Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
-
-Transcript:
-${transcript}`;
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_CONFIG.openaiKey}`
-        },
-        body: JSON.stringify({
-            model: API_CONFIG.openaiModel,
-            messages: [
-                {
-                    role: 'system',
-                    content: 'You are an educational content analyzer. Always respond with valid JSON only.'
-                },
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
-            temperature: 0.7,
-            response_format: { type: "json_object" }
-        })
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error?.message || 'OpenAI API request failed');
-    }
-
-    const data = await response.json();
-    const content = data.choices[0].message.content;
-    return JSON.parse(content);
-}
-
-/**
- * Call Claude API
- */
-async function callClaude(transcript) {
-    const languageNames = {
-        'en': 'English', 'es': 'Spanish', 'fr': 'French', 'de': 'German',
-        'it': 'Italian', 'pt': 'Portuguese', 'ru': 'Russian', 'ja': 'Japanese',
-        'ko': 'Korean', 'zh': 'Chinese', 'ar': 'Arabic', 'hi': 'Hindi',
-        'nl': 'Dutch', 'pl': 'Polish', 'tr': 'Turkish'
-    };
-    
-    const targetLang = state.targetLanguage || 'en';
-    const targetLangName = languageNames[targetLang] || 'English';
-    
-    // ALWAYS provide explicit language instruction
-    const languageInstruction = `\n\nIMPORTANT: You MUST generate ALL content (summary points, questions, options, and explanations) in ${targetLangName}. The transcript may be in a different language, but your output must be in ${targetLangName}. This is for language learning purposes.`;
-    
-    const prompt = `You are an educational content analyzer. Analyze the following video transcript and provide:
-
-1. A summary with 5 key points (as an array of strings)
-2. A quiz with exactly 5 multiple choice questions (each with 4 options)
-
-Return ONLY valid JSON in this exact format:
-{
-  "summary": ["point 1", "point 2", "point 3", "point 4", "point 5"],
-  "quiz": [
-    {
-      "type": "multiple-choice",
-      "question": "question text",
-      "options": ["option A", "option B", "option C", "option D"],
-      "correctAnswer": 0,
-      "explanation": "why this is correct"
-    }
-  ]
-}
-
-Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
-
-Transcript:
-${transcript}`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': API_CONFIG.claudeKey,
-            'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-            model: API_CONFIG.claudeModel,
-            max_tokens: 2000,
-            messages: [
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ]
-        })
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error?.message || 'Claude API request failed');
-    }
-
-    const data = await response.json();
-    const content = data.content[0].text;
-    
-    // Extract JSON from markdown code blocks if present
-    const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/) || content.match(/```\n([\s\S]*?)\n```/);
-    const jsonString = jsonMatch ? jsonMatch[1] : content;
-    
-    return JSON.parse(jsonString);
-}
-
-/**
  * Call Google Gemini API
  */
 async function callGemini(transcript) {
@@ -640,7 +481,7 @@ ${transcript}`;
                 temperature: 0.7,
                 topK: 40,
                 topP: 0.95,
-                maxOutputTokens: 4096,
+                maxOutputTokens: 16384,
             }
         })
     });
