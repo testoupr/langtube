@@ -34,6 +34,9 @@ const API_CONFIG = {
     
     // Option 4: Custom endpoint (serverless function, backend API)
     customEndpoint: '/api/process-transcript',
+    
+    // Supadata API for YouTube transcripts
+    supadataKey: 'sd_a7ec43f23cd8652aeee773706121bb25',
 };
 
 // ============================================================================
@@ -684,30 +687,88 @@ async function callCustomAPI(transcript) {
 // ============================================================================
 
 /**
- * Fetch transcript from serverless endpoint (stub with fallback)
+ * Fetch transcript from Supadata API
  */
 async function fetchTranscript(videoId) {
-    // Stub implementation - in production, this would call a real API
-    // For now, we'll simulate an API call and return an error to trigger fallback
-    
     try {
-        // Simulate API endpoint
-        const apiEndpoint = `/api/transcript/${videoId}`;
+        // Construct YouTube URL from video ID
+        const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
         
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Call Supadata API - uses GET method with query parameters
+        const apiUrl = `https://api.supadata.ai/v1/youtube/transcript?url=${encodeURIComponent(youtubeUrl)}`;
         
-        // For demo purposes, throw an error to demonstrate fallback
-        throw new Error('Transcript fetching not available. Please paste transcript manually.');
+        console.log('Fetching transcript from:', apiUrl);
         
-        // In production, you would:
-        // const response = await fetch(apiEndpoint);
-        // if (!response.ok) throw new Error('Failed to fetch transcript');
-        // const data = await response.json();
-        // return data.transcript;
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'x-api-key': API_CONFIG.supadataKey,
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Supadata API error response:', errorData);
+            
+            // Handle specific error cases
+            if (response.status === 404) {
+                throw new Error('Video not found or no captions available. Please try a different video or use manual paste.');
+            } else if (response.status === 401) {
+                throw new Error('API authentication failed. Please check the API key.');
+            } else if (response.status === 429) {
+                throw new Error('API rate limit exceeded. Please try again later.');
+            }
+            
+            throw new Error(errorData.message || `Failed to fetch transcript (status ${response.status})`);
+        }
+        
+        const data = await response.json();
+        console.log('Supadata response:', data);
+        
+        // Extract transcript text from response
+        // According to Supadata API: content can be a string or an array of segments
+        let transcript = '';
+        
+        if (data.content) {
+            if (typeof data.content === 'string') {
+                // Content is already a string
+                transcript = data.content;
+            } else if (Array.isArray(data.content)) {
+                // Content is an array of segments - join all text
+                transcript = data.content
+                    .map(segment => {
+                        // Each segment might have 'text' or 'content' field
+                        return segment.text || segment.content || segment;
+                    })
+                    .filter(text => typeof text === 'string' && text.trim().length > 0)
+                    .join(' ');
+            }
+        } else if (data.text) {
+            // Alternative field name
+            transcript = data.text;
+        } else if (data.transcript) {
+            // Another alternative
+            transcript = typeof data.transcript === 'string' 
+                ? data.transcript 
+                : JSON.stringify(data.transcript);
+        } else {
+            console.error('Unexpected response format:', data);
+            throw new Error('Unable to extract transcript from API response. Please try manual paste.');
+        }
+        
+        if (!transcript || typeof transcript !== 'string' || transcript.trim().length < 50) {
+            throw new Error('Transcript is too short or empty. The video may not have captions available.');
+        }
+        
+        console.log('Successfully fetched transcript, length:', transcript.length);
+        return transcript;
         
     } catch (error) {
-        throw error;
+        console.error('Supadata API error:', error);
+        // Provide user-friendly error message
+        const message = error.message || 'Failed to fetch transcript. Please try manual paste.';
+        throw new Error(message);
     }
 }
 
