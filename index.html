@@ -353,10 +353,32 @@
             <section id="input-section" class="section active">
                 <div class="section-header">
                     <h2>Get Started</h2>
-                    <div class="language-controls-inline">
-                        <div class="language-control">
-                            <label for="target-language">Learn:</label>
-                            <select id="target-language" aria-label="Select quiz language">
+                </div>
+
+                <div class="input-group">
+                    <label for="youtube-url">YouTube URL</label>
+                    <div class="url-input-wrapper">
+                        <div class="search-input-container">
+                            <input 
+                                type="text" 
+                                id="youtube-url" 
+                                placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                                aria-label="YouTube video URL"
+                            />
+                            <div class="search-icon-container">
+                                <!-- Icon space reserved for user to add icon -->
+                            </div>
+                        </div>
+                        <button id="fetch-transcript-btn" class="btn btn-primary">
+                            <span class="btn-text"> Make Quiz</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                    </div>
+                    <div class="error-message hidden" id="url-error"></div>
+                    <div class="controls-inline">
+                        <div class="control-group">
+                            <span class="control-label">Learn:</span>
+                            <select id="target-language" class="control-select-small" aria-label="Select quiz language">
                                 <option value="en">English</option>
                                 <option value="ar">Arabic (العربية)</option>
                                 <option value="bn">Bengali (বাংলা)</option>
@@ -397,32 +419,15 @@
                                 <option value="vi">Vietnamese (Tiếng Việt)</option>
                             </select>
                         </div>
-                        <div class="language-control">
-                            <label for="difficulty-level">Level:</label>
-                            <select id="difficulty-level" aria-label="Select difficulty level">
+                        <div class="control-group">
+                            <span class="control-label">Difficulty:</span>
+                            <select id="difficulty-level" class="control-select-small" aria-label="Select difficulty level">
                                 <option value="beginner">Beginner</option>
                                 <option value="intermediate" selected>Intermediate</option>
                                 <option value="advanced">Advanced</option>
                             </select>
                         </div>
                     </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="youtube-url">YouTube URL</label>
-                    <div class="url-input-wrapper">
-                        <input 
-                            type="text" 
-                            id="youtube-url" 
-                            placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
-                            aria-label="YouTube video URL"
-                        />
-                        <button id="fetch-transcript-btn" class="btn btn-primary">
-                            <span class="btn-text"> Make Quiz</span>
-                            <span class="spinner hidden"></span>
-                        </button>
-                    </div>
-                    <div class="error-message hidden" id="url-error"></div>
                 </div>
 
                 <div class="divider">

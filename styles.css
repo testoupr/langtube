@@ -136,9 +136,11 @@ body {
 
 /* Language Dropdown */
 .language-dropdown {
-    position: relative;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
     display: inline-block;
-    margin: 1rem 0;
+    z-index: 100;
 }
 
 .language-dropdown-btn {
@@ -146,25 +148,28 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.15);
     color: white;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1.5rem;
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.2s;
-    min-width: 200px;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    min-width: 140px;
     max-width: 100%;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
     box-sizing: border-box;
     overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .language-dropdown-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .language-dropdown-btn.active {
@@ -255,7 +260,6 @@ body {
     }
 }
 
-/* Language Marquee */
 .language-marquee {
     background: var(--primary-color);
     padding: 1rem 0;
@@ -269,7 +273,7 @@ body {
     display: flex;
     align-items: center;
     white-space: nowrap;
-    animation: scroll 40s linear infinite;
+    animation: scroll 90s linear infinite;
     color: white;
     font-weight: 600;
     font-size: 1.125rem;
@@ -427,9 +431,8 @@ body {
 
 /* Main Content */
 .main {
-    background: var(--surface-color);
+    background: transparent;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
     padding: 2.5rem;
     width: 100%;
     max-width: 100%;
@@ -464,7 +467,9 @@ body {
 .section h2 {
     font-size: 1.875rem;
     margin-bottom: 1.5rem;
-    color: var(--text-primary);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 /* Input Groups */
@@ -476,62 +481,271 @@ body {
     display: block;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--text-primary);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .url-input-wrapper {
     display: flex;
-    gap: 0.75rem;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-input-container {
+    position: relative;
+    flex: 1;
+    max-width: 600px;
+}
+
+.search-icon-container {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.controls-inline {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    justify-content: center;
+    font-size: 0.875rem;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.control-label {
+    color: white;
+    opacity: 0.9;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.control-select-small {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1rem;
+    color: var(--text-primary);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    min-width: 120px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+}
+
+.control-select-small:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.control-select-small:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 126, 167, 0.2);
+}
+
+.search-input-container {
+    position: relative;
+    flex: 1;
+    max-width: 600px;
+    border-radius: 2rem;
+    padding: 2px;
+    background: conic-gradient(
+        from 0deg,
+        rgba(255, 0, 0, 0.4),
+        rgba(255, 128, 0, 0.4),
+        rgba(255, 255, 0, 0.4),
+        rgba(128, 255, 0, 0.4),
+        rgba(0, 255, 0, 0.4),
+        rgba(0, 255, 128, 0.4),
+        rgba(0, 255, 255, 0.4),
+        rgba(0, 128, 255, 0.4),
+        rgba(0, 0, 255, 0.4),
+        rgba(128, 0, 255, 0.4),
+        rgba(255, 0, 255, 0.4),
+        rgba(255, 0, 128, 0.4),
+        rgba(255, 0, 0, 0.4)
+    );
+    animation: subtleColorShift 8s ease-in-out infinite;
+}
+
+@keyframes subtleColorShift {
+    0%, 100% {
+        filter: hue-rotate(0deg) saturate(1);
+    }
+    25% {
+        filter: hue-rotate(90deg) saturate(1.2);
+    }
+    50% {
+        filter: hue-rotate(180deg) saturate(0.8);
+    }
+    75% {
+        filter: hue-rotate(270deg) saturate(1.1);
+    }
+}
+
+.search-input-container input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1.5rem;
+    border: none;
+    border-radius: calc(2rem - 2px);
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    background: rgba(255, 255, 255, 1);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes rainbowRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 input[type="text"],
 textarea {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    transition: all 0.2s;
+    padding: 1rem 3rem 1rem 1.5rem;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    border-radius: 2rem;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
     font-family: inherit;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 input[type="text"]:focus,
 textarea:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 4px rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.98);
+    transform: translateY(-2px);
+    animation: none;
 }
 
 textarea {
     resize: vertical;
     min-height: 150px;
+    padding: 1rem 1.5rem;
+    border-radius: 2rem;
 }
 
 /* Buttons */
 .btn {
-    padding: 0.75rem 1.5rem;
+    padding: 1rem 2rem;
     border: none;
-    border-radius: var(--radius-md);
-    font-size: 1rem;
+    border-radius: 2rem;
+    font-size: 1.125rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     white-space: nowrap;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
 }
 
 .btn-primary {
-    background: var(--primary-color);
-    color: white;
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--text-primary);
+    border: 2px solid transparent;
+    animation: subtleColorShift 8s ease-in-out infinite;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: conic-gradient(
+        from 0deg,
+        rgba(255, 0, 0, 0.4),
+        rgba(255, 128, 0, 0.4),
+        rgba(255, 255, 0, 0.4),
+        rgba(128, 255, 0, 0.4),
+        rgba(0, 255, 0, 0.4),
+        rgba(0, 255, 128, 0.4),
+        rgba(0, 255, 255, 0.4),
+        rgba(0, 128, 255, 0.4),
+        rgba(0, 0, 255, 0.4),
+        rgba(128, 0, 255, 0.4),
+        rgba(255, 0, 255, 0.4),
+        rgba(255, 0, 128, 0.4),
+        rgba(255, 0, 0, 0.4)
+    );
+    border-radius: 2rem;
+    z-index: -1;
+    animation: subtleColorShift 8s ease-in-out infinite;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    padding: 2px;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 126, 167, 0.4);
+}
+
+.btn-primary:hover:not(:disabled)::before {
+    background: conic-gradient(
+        from 0deg,
+        rgba(255, 0, 0, 0.6),
+        rgba(255, 128, 0, 0.6),
+        rgba(255, 255, 0, 0.6),
+        rgba(128, 255, 0, 0.6),
+        rgba(0, 255, 0, 0.6),
+        rgba(0, 255, 128, 0.6),
+        rgba(0, 255, 255, 0.6),
+        rgba(0, 128, 255, 0.6),
+        rgba(0, 0, 255, 0.6),
+        rgba(128, 0, 255, 0.6),
+        rgba(255, 0, 255, 0.6),
+        rgba(255, 0, 128, 0.6),
+        rgba(255, 0, 0, 0.6)
+    );
 }
 
 .btn-secondary {
@@ -541,8 +755,8 @@ textarea {
 
 .btn-secondary:hover:not(:disabled) {
     background: #475569;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 52, 89, 0.4);
 }
 
 .btn:disabled {
@@ -616,6 +830,7 @@ textarea {
     margin: 0;
     flex: 1;
     min-width: 200px;
+    align-self: center;
 }
 
 .language-controls-inline {
@@ -1412,6 +1627,191 @@ textarea {
     
     .vocab-word {
         font-size: 1rem;
+    }
+}
+
+/* RTL (Right-to-Left) Language Support */
+[dir="rtl"], 
+html[lang="ar"], 
+html[lang="he"], 
+html[lang="fa"], 
+html[lang="ur"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .container,
+html[lang="ar"] .container,
+html[lang="he"] .container,
+html[lang="fa"] .container,
+html[lang="ur"] .container {
+    direction: rtl;
+}
+
+/* RTL Header adjustments */
+[dir="rtl"] .header,
+html[lang="ar"] .header,
+html[lang="he"] .header,
+html[lang="fa"] .header,
+html[lang="ur"] .header {
+    text-align: center;
+}
+
+[dir="rtl"] .tagline,
+html[lang="ar"] .tagline,
+html[lang="he"] .tagline,
+html[lang="fa"] .tagline,
+html[lang="ur"] .tagline {
+    text-align: center;
+}
+
+/* RTL Language dropdown positioning */
+[dir="rtl"] .language-dropdown,
+html[lang="ar"] .language-dropdown,
+html[lang="he"] .language-dropdown,
+html[lang="fa"] .language-dropdown,
+html[lang="ur"] .language-dropdown {
+    left: 1rem;
+    right: auto;
+}
+
+/* RTL Input field adjustments */
+[dir="rtl"] .search-input-container input,
+html[lang="ar"] .search-input-container input,
+html[lang="he"] .search-input-container input,
+html[lang="fa"] .search-input-container input,
+html[lang="ur"] .search-input-container input {
+    text-align: right;
+    padding: 1rem 1.5rem 1rem 3rem; /* Adjust padding for RTL */
+}
+
+[dir="rtl"] .search-icon-container,
+html[lang="ar"] .search-icon-container,
+html[lang="he"] .search-icon-container,
+html[lang="fa"] .search-icon-container,
+html[lang="ur"] .search-icon-container {
+    left: 1rem;
+    right: auto;
+}
+
+/* RTL Controls alignment */
+[dir="rtl"] .controls-inline,
+html[lang="ar"] .controls-inline,
+html[lang="he"] .controls-inline,
+html[lang="fa"] .controls-inline,
+html[lang="ur"] .controls-inline {
+    text-align: center;
+}
+
+[dir="rtl"] .control-group,
+html[lang="ar"] .control-group,
+html[lang="he"] .control-group,
+html[lang="fa"] .control-group,
+html[lang="ur"] .control-group {
+    flex-direction: row;
+}
+
+/* RTL Select dropdown arrow positioning */
+[dir="rtl"] .control-select-small,
+html[lang="ar"] .control-select-small,
+html[lang="he"] .control-select-small,
+html[lang="fa"] .control-select-small,
+html[lang="ur"] .control-select-small {
+    background-position: left 0.75rem center;
+    padding-left: 2.5rem;
+    padding-right: 0.75rem;
+}
+
+/* RTL Textarea alignment */
+[dir="rtl"] textarea,
+html[lang="ar"] textarea,
+html[lang="he"] textarea,
+html[lang="fa"] textarea,
+html[lang="ur"] textarea {
+    text-align: right;
+    direction: rtl;
+}
+
+/* RTL Quiz content */
+[dir="rtl"] .quiz-question,
+html[lang="ar"] .quiz-question,
+html[lang="he"] .quiz-question,
+html[lang="fa"] .quiz-question,
+html[lang="ur"] .quiz-question {
+    text-align: right;
+}
+
+[dir="rtl"] .quiz-options,
+html[lang="ar"] .quiz-options,
+html[lang="he"] .quiz-options,
+html[lang="fa"] .quiz-options,
+html[lang="ur"] .quiz-options {
+    text-align: right;
+}
+
+/* RTL Modal adjustments */
+[dir="rtl"] .modal-content,
+html[lang="ar"] .modal-content,
+html[lang="he"] .modal-content,
+html[lang="fa"] .modal-content,
+html[lang="ur"] .modal-content {
+    text-align: right;
+}
+
+[dir="rtl"] .close-btn,
+html[lang="ar"] .close-btn,
+html[lang="he"] .close-btn,
+html[lang="fa"] .close-btn,
+html[lang="ur"] .close-btn {
+    left: 1rem;
+    right: auto;
+}
+
+/* RTL Results section */
+[dir="rtl"] .results-header,
+html[lang="ar"] .results-header,
+html[lang="he"] .results-header,
+html[lang="fa"] .results-header,
+html[lang="ur"] .results-header {
+    text-align: center;
+}
+
+/* RTL Vocabulary cards */
+[dir="rtl"] .vocabulary-item,
+html[lang="ar"] .vocabulary-item,
+html[lang="he"] .vocabulary-item,
+html[lang="fa"] .vocabulary-item,
+html[lang="ur"] .vocabulary-item {
+    text-align: right;
+}
+
+[dir="rtl"] .vocab-example,
+html[lang="ar"] .vocab-example,
+html[lang="he"] .vocab-example,
+html[lang="fa"] .vocab-example,
+html[lang="ur"] .vocab-example {
+    border-left: none;
+    border-right: 3px solid var(--primary-color);
+}
+
+/* RTL Footer */
+[dir="rtl"] .footer,
+html[lang="ar"] .footer,
+html[lang="he"] .footer,
+html[lang="fa"] .footer,
+html[lang="ur"] .footer {
+    text-align: center;
+}
+
+/* RTL Responsive adjustments */
+@media (max-width: 768px) {
+    [dir="rtl"] .language-dropdown,
+    html[lang="ar"] .language-dropdown,
+    html[lang="he"] .language-dropdown,
+    html[lang="fa"] .language-dropdown,
+    html[lang="ur"] .language-dropdown {
+        left: 0.5rem;
+        right: auto;
     }
 }
 
