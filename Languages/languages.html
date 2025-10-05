@@ -3,9 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangTube - Learn by watching videos</title>
+    <title>LangTube - All Languages</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎬</text></svg>">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .languages-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .language-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .language-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+        
+        .language-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .language-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .language-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .language-link:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,23 +92,23 @@
             <!-- Language Dropdown -->
             <div class="language-dropdown">
                 <button class="language-dropdown-btn" id="language-dropdown-btn">
-                    <span class="current-language" id="current-language">🇺🇸 English</span>
+                    <span class="current-language" id="current-language">🌍 All Languages</span>
                     <span class="dropdown-arrow">▼</span>
                 </button>
                 <div class="language-dropdown-menu" id="language-dropdown-menu">
-                    <a href="index.html" class="language-option" data-lang="en">🇺🇸 English</a>
-                    <a href="languages/spanish.html" class="language-option" data-lang="es">🇪🇸 Español / Spanish</a>
-                    <a href="languages/french.html" class="language-option" data-lang="fr">🇫🇷 Français / French</a>
-                    <a href="languages/german.html" class="language-option" data-lang="de">🇩🇪 Deutsch / German</a>
-                    <a href="languages/chinese.html" class="language-option" data-lang="zh">🇨🇳 中文 / Chinese</a>
-                    <a href="languages/japanese.html" class="language-option" data-lang="ja">🇯🇵 日本語 / Japanese</a>
-                    <a href="languages/korean.html" class="language-option" data-lang="ko">🇰🇷 한국어 / Korean</a>
-                    <a href="languages/arabic.html" class="language-option" data-lang="ar">🇸🇦 العربية / Arabic</a>
-                    <a href="languages/hindi.html" class="language-option" data-lang="hi">🇮🇳 हिन्दी / Hindi</a>
-                    <a href="languages/portuguese.html" class="language-option" data-lang="pt">🇵🇹 Português / Portuguese</a>
-                    <a href="languages/russian.html" class="language-option" data-lang="ru">🇷🇺 Русский / Russian</a>
-                    <a href="languages/italian.html" class="language-option" data-lang="it">🇮🇹 Italiano / Italian</a>
-                    <a href="languages/languages.html" class="language-option" data-lang="all">🌍 All Languages</a>
+                    <a href="../index.html" class="language-option" data-lang="en">🇺🇸 English</a>
+                    <a href="spanish.html" class="language-option" data-lang="es">🇪🇸 Español / Spanish</a>
+                    <a href="french.html" class="language-option" data-lang="fr">🇫🇷 Français / French</a>
+                    <a href="german.html" class="language-option" data-lang="de">🇩🇪 Deutsch / German</a>
+                    <a href="chinese.html" class="language-option" data-lang="zh">🇨🇳 中文 / Chinese</a>
+                    <a href="japanese.html" class="language-option" data-lang="ja">🇯🇵 日本語 / Japanese</a>
+                    <a href="korean.html" class="language-option" data-lang="ko">🇰🇷 한국어 / Korean</a>
+                    <a href="arabic.html" class="language-option" data-lang="ar">🇸🇦 العربية / Arabic</a>
+                    <a href="hindi.html" class="language-option" data-lang="hi">🇮🇳 हिन्दी / Hindi</a>
+                    <a href="portuguese.html" class="language-option" data-lang="pt">🇵🇹 Português / Portuguese</a>
+                    <a href="russian.html" class="language-option" data-lang="ru">🇷🇺 Русский / Russian</a>
+                    <a href="italian.html" class="language-option" data-lang="it">🇮🇹 Italiano / Italian</a>
+                    <a href="languages.html" class="language-option" data-lang="all">🌍 All Languages</a>
                 </div>
             </div>
         </header>
@@ -349,157 +425,84 @@
         </div>
 
         <main class="main">
-            <!-- Step 1: Input Section -->
-            <section id="input-section" class="section active">
-                <h2>Get Started</h2>
-                <div class="input-group">
-                    <label for="youtube-url">YouTube URL</label>
-                    <div class="url-input-wrapper">
-                        <input 
-                            type="text" 
-                            id="youtube-url" 
-                            placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
-                            aria-label="YouTube video URL"
-                        />
-                        <button id="fetch-transcript-btn" class="btn btn-primary">
-                            <span class="btn-text"> Make Quiz</span>
-                            <span class="spinner hidden"></span>
-                        </button>
+            <div class="languages-container">
+                <h2>Choose Your Language</h2>
+                <p>Select your preferred language to use LangTube in your native language:</p>
+                
+                <div class="languages-grid">
+                    <div class="language-card">
+                        <h3>🇺🇸 English</h3>
+                        <p>Transform YouTube videos into interactive learning experiences</p>
+                        <a href="../index.html" class="language-link">Use in English →</a>
                     </div>
-                    <div class="error-message hidden" id="url-error"></div>
-                </div>
-
-                <!-- Language Selection -->
-                <div class="language-selection">
-                    <div class="input-group language-group-single">
-                        <label for="target-language">
-                            <span class="label-main">Quiz & Summary Language</span>
-                            <span class="label-hint">Choose the language for questions and summaries</span>
-                        </label>
-                        <select id="target-language" aria-label="Select quiz language">
-                            <option value="en">English</option>
-                            <option value="ar">Arabic (العربية)</option>
-                            <option value="bn">Bengali (বাংলা)</option>
-                            <option value="bg">Bulgarian (Български)</option>
-                            <option value="zh">Chinese (中文)</option>
-                            <option value="hr">Croatian (Hrvatski)</option>
-                            <option value="cs">Czech (Čeština)</option>
-                            <option value="da">Danish (Dansk)</option>
-                            <option value="nl">Dutch (Nederlands)</option>
-                            <option value="et">Estonian (Eesti)</option>
-                            <option value="fi">Finnish (Suomi)</option>
-                            <option value="fr">French (Français)</option>
-                            <option value="de">German (Deutsch)</option>
-                            <option value="el">Greek (Ελληνικά)</option>
-                            <option value="he">Hebrew (עברית)</option>
-                            <option value="hi">Hindi (हिन्दी)</option>
-                            <option value="hu">Hungarian (Magyar)</option>
-                            <option value="id">Indonesian (Bahasa Indonesia)</option>
-                            <option value="it">Italian (Italiano)</option>
-                            <option value="ja">Japanese (日本語)</option>
-                            <option value="ko">Korean (한국어)</option>
-                            <option value="lv">Latvian (Latviešu)</option>
-                            <option value="lt">Lithuanian (Lietuvių)</option>
-                            <option value="no">Norwegian (Norsk)</option>
-                            <option value="pl">Polish (Polski)</option>
-                            <option value="pt">Portuguese (Português)</option>
-                            <option value="ro">Romanian (Română)</option>
-                            <option value="ru">Russian (Русский)</option>
-                            <option value="sr">Serbian (Српски)</option>
-                            <option value="sk">Slovak (Slovenčina)</option>
-                            <option value="sl">Slovenian (Slovenščina)</option>
-                            <option value="es">Spanish (Español)</option>
-                            <option value="sw">Swahili (Kiswahili)</option>
-                            <option value="sv">Swedish (Svenska)</option>
-                            <option value="th">Thai (ไทย)</option>
-                            <option value="tr">Turkish (Türkçe)</option>
-                            <option value="uk">Ukrainian (Українська)</option>
-                            <option value="vi">Vietnamese (Tiếng Việt)</option>
-                        </select>
+                    
+                    <div class="language-card">
+                        <h3>🇪🇸 Español</h3>
+                        <p>Transforma videos de YouTube en experiencias de aprendizaje interactivas</p>
+                        <a href="spanish.html" class="language-link">Usar en Español →</a>
                     </div>
-                </div>
-
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-
-                <div class="input-group">
-                    <label for="manual-transcript">Paste Transcript Manually</label>
-                    <textarea 
-                        id="manual-transcript" 
-                        rows="8" 
-                        placeholder="Paste your YouTube transcript here (timestamps will be cleaned automatically)..."
-                        aria-label="Manual transcript input"
-                    ></textarea>
-                    <button id="process-manual-btn" class="btn btn-secondary">
-                        Process Transcript
-                    </button>
-                </div>
-            </section>
-
-            <!-- Step 2: Processing/Loading Section -->
-            <section id="processing-section" class="section hidden">
-                <div class="loading-state">
-                    <div class="spinner-large"></div>
-                    <h3>Processing Video Content</h3>
-                    <p id="processing-status">Analyzing transcript...</p>
-                </div>
-            </section>
-
-            <!-- Step 3: Summary Section -->
-            <section id="summary-section" class="section hidden">
-                <h2>Video Summary</h2>
-                <div class="video-info" id="video-info"></div>
-                <div class="summary-content" id="summary-content"></div>
-                <div class="action-buttons">
-                    <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
-                    <button id="view-transcript-btn" class="btn btn-secondary">View Full Transcript</button>
-                </div>
-            </section>
-
-            <!-- Transcript Modal -->
-            <div id="transcript-modal" class="modal hidden">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Full Transcript</h3>
-                        <button class="close-btn" id="close-transcript-modal">&times;</button>
+                    
+                    <div class="language-card">
+                        <h3>🇫🇷 Français</h3>
+                        <p>Transformez les vidéos YouTube en expériences d'apprentissage interactives</p>
+                        <a href="french.html" class="language-link">Utiliser en Français →</a>
                     </div>
-                    <div class="modal-body" id="transcript-modal-body"></div>
+                    
+                    <div class="language-card">
+                        <h3>🇩🇪 Deutsch</h3>
+                        <p>Verwandeln Sie YouTube-Videos in interaktive Lernerfahrungen</p>
+                        <a href="german.html" class="language-link">Auf Deutsch verwenden →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇨🇳 中文</h3>
+                        <p>将YouTube视频转化为互动学习体验</p>
+                        <a href="chinese.html" class="language-link">使用中文 →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇯🇵 日本語</h3>
+                        <p>YouTube動画をインタラクティブな学習体験に変換</p>
+                        <a href="japanese.html" class="language-link">日本語で使用 →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇰🇷 한국어</h3>
+                        <p>YouTube 비디오를 인터랙티브한 학습 경험으로 변환</p>
+                        <a href="korean.html" class="language-link">한국어로 사용 →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇸🇦 العربية</h3>
+                        <p>حول فيديوهات يوتيوب إلى تجارب تعليمية تفاعلية</p>
+                        <a href="arabic.html" class="language-link">استخدم بالعربية →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇮🇳 हिन्दी</h3>
+                        <p>YouTube वीडियो को इंटरैक्टिव लर्निंग अनुभव में बदलें</p>
+                        <a href="hindi.html" class="language-link">हिन्दी में उपयोग करें →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇵🇹 Português</h3>
+                        <p>Transforme vídeos do YouTube em experiências de aprendizado interativas</p>
+                        <a href="portuguese.html" class="language-link">Usar em Português →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇷🇺 Русский</h3>
+                        <p>Превращайте видео YouTube в интерактивные обучающие опыты</p>
+                        <a href="russian.html" class="language-link">Использовать на русском →</a>
+                    </div>
+                    
+                    <div class="language-card">
+                        <h3>🇮🇹 Italiano</h3>
+                        <p>Trasforma i video di YouTube in esperienze di apprendimento interattive</p>
+                        <a href="italian.html" class="language-link">Usa in Italiano →</a>
+                    </div>
                 </div>
             </div>
-
-            <!-- Step 4: Quiz Section -->
-            <section id="quiz-section" class="section hidden">
-                <div class="quiz-header">
-                    <h2>Knowledge Quiz</h2>
-                    <div class="quiz-progress">
-                        <span id="quiz-progress-text">Question 1 of 5</span>
-                    </div>
-                </div>
-                <div id="quiz-container"></div>
-            </section>
-
-            <!-- Step 5: Results Section -->
-            <section id="results-section" class="section hidden">
-                <div class="results-header">
-                    <h2>Quiz Results</h2>
-                    <div class="score-display">
-                        <div class="score-circle">
-                            <span id="score-percentage">0%</span>
-                        </div>
-                        <p id="score-message">Great job!</p>
-                    </div>
-                </div>
-                <div id="results-details"></div>
-                <div class="action-buttons">
-                    <button id="retake-quiz-btn" class="btn btn-primary">Retake Quiz</button>
-                    <button id="new-video-btn" class="btn btn-secondary">Analyze New Video</button>
-                </div>
-                <div class="history-section">
-                    <h3>Previous Attempts</h3>
-                    <div id="attempt-history"></div>
-                </div>
-            </section>
         </main>
 
         <footer class="footer">
@@ -507,9 +510,7 @@
         </footer>
     </div>
 
-    <script src="youtube-embed.js"></script>
-    <script src="app.js"></script>
-    <script src="language-dropdown.js"></script>
+    <script src="../youtube-embed.js"></script>
+    <script src="../language-dropdown.js"></script>
 </body>
 </html>
-

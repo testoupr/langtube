@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Migration Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        .test-section {
+            background: white;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .test-title {
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        .test-result {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+            background: #f0fdf4;
+        }
+        .test-error {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 YouTube Migration Test</h1>
+    
+    <div class="test-section">
+        <h2 class="test-title">Test 1: Functions Available</h2>
+        <div id="functions-test" class="test-result">Testing...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2 class="test-title">Test 2: Video ID Extraction</h2>
+        <div id="video-id-test" class="test-result">Testing...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2 class="test-title">Test 3: Timestamp Extraction</h2>
+        <div id="timestamp-test" class="test-result">Testing...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2 class="test-title">Test 4: Full Embed Generation</h2>
+        <div id="embed-test" class="test-result">Testing...</div>
+    </div>
+
+    <script src="youtube-embed.js"></script>
+    <script>
+        // Test 1: Check if functions are available
+        function testFunctions() {
+            const functions = [
+                'extractVideoIdFromUrl',
+                'extractTimestampFromUrl', 
+                'createYouTubeEmbedFromUrl'
+            ];
+            
+            const missing = functions.filter(func => typeof window[func] !== 'function');
+            
+            const result = `
+                <h4>${missing.length === 0 ? '✅' : '❌'} Function Availability Test</h4>
+                <p><strong>Available functions:</strong> ${functions.length - missing.length}/${functions.length}</p>
+                ${missing.length > 0 ? `<p><strong>Missing:</strong> ${missing.join(', ')}</p>` : ''}
+            `;
+            
+            document.getElementById('functions-test').innerHTML = result;
+            document.getElementById('functions-test').className = missing.length === 0 ? 'test-result' : 'test-result test-error';
+        }
+        
+        // Test 2: Video ID extraction
+        function testVideoIdExtraction() {
+            const testUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=2m30s';
+            const videoId = extractVideoIdFromUrl(testUrl);
+            
+            const result = `
+                <h4>${videoId ? '✅' : '❌'} Video ID Extraction</h4>
+                <p><strong>URL:</strong> ${testUrl}</p>
+                <p><strong>Extracted Video ID:</strong> ${videoId || 'null'}</p>
+                <p><strong>Expected:</strong> dQw4w9WgXcQ</p>
+            `;
+            
+            document.getElementById('video-id-test').innerHTML = result;
+            document.getElementById('video-id-test').className = videoId === 'dQw4w9WgXcQ' ? 'test-result' : 'test-result test-error';
+        }
+        
+        // Test 3: Timestamp extraction
+        function testTimestampExtraction() {
+            const testUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=2m30s';
+            const timestamp = extractTimestampFromUrl(testUrl);
+            
+            const result = `
+                <h4>${timestamp === '2:30' ? '✅' : '❌'} Timestamp Extraction</h4>
+                <p><strong>URL:</strong> ${testUrl}</p>
+                <p><strong>Extracted Timestamp:</strong> ${timestamp || 'null'}</p>
+                <p><strong>Expected:</strong> 2:30</p>
+            `;
+            
+            document.getElementById('timestamp-test').innerHTML = result;
+            document.getElementById('timestamp-test').className = timestamp === '2:30' ? 'test-result' : 'test-result test-error';
+        }
+        
+        // Test 4: Full embed generation
+        function testEmbedGeneration() {
+            const testUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=2m30s';
+            const embed = createYouTubeEmbedFromUrl(testUrl);
+            
+            const hasIframe = embed.includes('<iframe');
+            const hasVideoId = embed.includes('dQw4w9WgXcQ');
+            const hasStartTime = embed.includes('start=150');
+            
+            const result = `
+                <h4>${hasIframe && hasVideoId && hasStartTime ? '✅' : '❌'} Embed Generation</h4>
+                <p><strong>URL:</strong> ${testUrl}</p>
+                <p><strong>Generated Embed:</strong> ${embed ? 'Yes' : 'No'}</p>
+                <p><strong>Contains iframe:</strong> ${hasIframe ? 'Yes' : 'No'}</p>
+                <p><strong>Contains video ID:</strong> ${hasVideoId ? 'Yes' : 'No'}</p>
+                <p><strong>Contains start time:</strong> ${hasStartTime ? 'Yes' : 'No'}</p>
+                ${embed ? `
+                    <h4>🎬 Generated Embed Preview:</h4>
+                    ${embed}
+                ` : ''}
+            `;
+            
+            document.getElementById('embed-test').innerHTML = result;
+            document.getElementById('embed-test').className = hasIframe && hasVideoId && hasStartTime ? 'test-result' : 'test-result test-error';
+        }
+        
+        // Run all tests when page loads
+        window.addEventListener('load', () => {
+            testFunctions();
+            testVideoIdExtraction();
+            testTimestampExtraction();
+            testEmbedGeneration();
+        });
+    </script>
+</body>
+</html>

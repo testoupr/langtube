@@ -1,43 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangTube - Learn by watching videos</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎬</text></svg>">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <h1 class="logo">LangTube</h1>
-            <p class="tagline">Transform YouTube videos into interactive learning experiences</p>
-            
-            <!-- Language Dropdown -->
-            <div class="language-dropdown">
-                <button class="language-dropdown-btn" id="language-dropdown-btn">
-                    <span class="current-language" id="current-language">🇺🇸 English</span>
-                    <span class="dropdown-arrow">▼</span>
-                </button>
-                <div class="language-dropdown-menu" id="language-dropdown-menu">
-                    <a href="index.html" class="language-option" data-lang="en">🇺🇸 English</a>
-                    <a href="languages/spanish.html" class="language-option" data-lang="es">🇪🇸 Español / Spanish</a>
-                    <a href="languages/french.html" class="language-option" data-lang="fr">🇫🇷 Français / French</a>
-                    <a href="languages/german.html" class="language-option" data-lang="de">🇩🇪 Deutsch / German</a>
-                    <a href="languages/chinese.html" class="language-option" data-lang="zh">🇨🇳 中文 / Chinese</a>
-                    <a href="languages/japanese.html" class="language-option" data-lang="ja">🇯🇵 日本語 / Japanese</a>
-                    <a href="languages/korean.html" class="language-option" data-lang="ko">🇰🇷 한국어 / Korean</a>
-                    <a href="languages/arabic.html" class="language-option" data-lang="ar">🇸🇦 العربية / Arabic</a>
-                    <a href="languages/hindi.html" class="language-option" data-lang="hi">🇮🇳 हिन्दी / Hindi</a>
-                    <a href="languages/portuguese.html" class="language-option" data-lang="pt">🇵🇹 Português / Portuguese</a>
-                    <a href="languages/russian.html" class="language-option" data-lang="ru">🇷🇺 Русский / Russian</a>
-                    <a href="languages/italian.html" class="language-option" data-lang="it">🇮🇹 Italiano / Italian</a>
-                    <a href="languages/languages.html" class="language-option" data-lang="all">🌍 All Languages</a>
-                </div>
-            </div>
-        </header>
+// Script to update all language pages with simplified marquee
+const fs = require('fs');
+const path = require('path');
 
-        <!-- Language Marquee -->
+// Simplified marquee HTML template
+const simpleMarqueeHTML = `        <!-- Language Marquee -->
         <div class="language-marquee">
             <div class="marquee-content">
                 <div class="language-item">
@@ -346,170 +312,53 @@
                     <span class="language-name">Українська</span>
                 </div>
             </div>
-        </div>
+        </div>`;
 
-        <main class="main">
-            <!-- Step 1: Input Section -->
-            <section id="input-section" class="section active">
-                <h2>Get Started</h2>
-                <div class="input-group">
-                    <label for="youtube-url">YouTube URL</label>
-                    <div class="url-input-wrapper">
-                        <input 
-                            type="text" 
-                            id="youtube-url" 
-                            placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
-                            aria-label="YouTube video URL"
-                        />
-                        <button id="fetch-transcript-btn" class="btn btn-primary">
-                            <span class="btn-text"> Make Quiz</span>
-                            <span class="spinner hidden"></span>
-                        </button>
-                    </div>
-                    <div class="error-message hidden" id="url-error"></div>
-                </div>
+// Function to update marquee in a file
+function updateMarqueeInFile(filePath) {
+    try {
+        let content = fs.readFileSync(filePath, 'utf8');
+        
+        // Find and replace the existing marquee
+        const marqueePattern = /<!-- Language Marquee -->[\s\S]*?<\/div>\s*<\/div>/;
+        
+        if (content.match(marqueePattern)) {
+            content = content.replace(marqueePattern, simpleMarqueeHTML);
+            fs.writeFileSync(filePath, content, 'utf8');
+            console.log(`Updated marquee in ${filePath}`);
+        } else {
+            console.log(`No marquee found in ${filePath}`);
+        }
+        
+    } catch (error) {
+        console.error(`Error processing ${filePath}:`, error.message);
+    }
+}
 
-                <!-- Language Selection -->
-                <div class="language-selection">
-                    <div class="input-group language-group-single">
-                        <label for="target-language">
-                            <span class="label-main">Quiz & Summary Language</span>
-                            <span class="label-hint">Choose the language for questions and summaries</span>
-                        </label>
-                        <select id="target-language" aria-label="Select quiz language">
-                            <option value="en">English</option>
-                            <option value="ar">Arabic (العربية)</option>
-                            <option value="bn">Bengali (বাংলা)</option>
-                            <option value="bg">Bulgarian (Български)</option>
-                            <option value="zh">Chinese (中文)</option>
-                            <option value="hr">Croatian (Hrvatski)</option>
-                            <option value="cs">Czech (Čeština)</option>
-                            <option value="da">Danish (Dansk)</option>
-                            <option value="nl">Dutch (Nederlands)</option>
-                            <option value="et">Estonian (Eesti)</option>
-                            <option value="fi">Finnish (Suomi)</option>
-                            <option value="fr">French (Français)</option>
-                            <option value="de">German (Deutsch)</option>
-                            <option value="el">Greek (Ελληνικά)</option>
-                            <option value="he">Hebrew (עברית)</option>
-                            <option value="hi">Hindi (हिन्दी)</option>
-                            <option value="hu">Hungarian (Magyar)</option>
-                            <option value="id">Indonesian (Bahasa Indonesia)</option>
-                            <option value="it">Italian (Italiano)</option>
-                            <option value="ja">Japanese (日本語)</option>
-                            <option value="ko">Korean (한국어)</option>
-                            <option value="lv">Latvian (Latviešu)</option>
-                            <option value="lt">Lithuanian (Lietuvių)</option>
-                            <option value="no">Norwegian (Norsk)</option>
-                            <option value="pl">Polish (Polski)</option>
-                            <option value="pt">Portuguese (Português)</option>
-                            <option value="ro">Romanian (Română)</option>
-                            <option value="ru">Russian (Русский)</option>
-                            <option value="sr">Serbian (Српски)</option>
-                            <option value="sk">Slovak (Slovenčina)</option>
-                            <option value="sl">Slovenian (Slovenščina)</option>
-                            <option value="es">Spanish (Español)</option>
-                            <option value="sw">Swahili (Kiswahili)</option>
-                            <option value="sv">Swedish (Svenska)</option>
-                            <option value="th">Thai (ไทย)</option>
-                            <option value="tr">Turkish (Türkçe)</option>
-                            <option value="uk">Ukrainian (Українська)</option>
-                            <option value="vi">Vietnamese (Tiếng Việt)</option>
-                        </select>
-                    </div>
-                </div>
+// List of all language files
+const languageFiles = [
+    '../languages/spanish.html',
+    '../languages/french.html',
+    '../languages/german.html',
+    '../languages/chinese.html',
+    '../languages/japanese.html',
+    '../languages/korean.html',
+    '../languages/arabic.html',
+    '../languages/hindi.html',
+    '../languages/portuguese.html',
+    '../languages/russian.html',
+    '../languages/italian.html',
+    '../languages/languages.html'
+];
 
-                <div class="divider">
-                    <span>OR</span>
-                </div>
+// Update marquee in all language files
+languageFiles.forEach(file => {
+    const filePath = path.join(__dirname, file);
+    if (fs.existsSync(filePath)) {
+        updateMarqueeInFile(filePath);
+    } else {
+        console.log(`File ${file} does not exist, skipping...`);
+    }
+});
 
-                <div class="input-group">
-                    <label for="manual-transcript">Paste Transcript Manually</label>
-                    <textarea 
-                        id="manual-transcript" 
-                        rows="8" 
-                        placeholder="Paste your YouTube transcript here (timestamps will be cleaned automatically)..."
-                        aria-label="Manual transcript input"
-                    ></textarea>
-                    <button id="process-manual-btn" class="btn btn-secondary">
-                        Process Transcript
-                    </button>
-                </div>
-            </section>
-
-            <!-- Step 2: Processing/Loading Section -->
-            <section id="processing-section" class="section hidden">
-                <div class="loading-state">
-                    <div class="spinner-large"></div>
-                    <h3>Processing Video Content</h3>
-                    <p id="processing-status">Analyzing transcript...</p>
-                </div>
-            </section>
-
-            <!-- Step 3: Summary Section -->
-            <section id="summary-section" class="section hidden">
-                <h2>Video Summary</h2>
-                <div class="video-info" id="video-info"></div>
-                <div class="summary-content" id="summary-content"></div>
-                <div class="action-buttons">
-                    <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
-                    <button id="view-transcript-btn" class="btn btn-secondary">View Full Transcript</button>
-                </div>
-            </section>
-
-            <!-- Transcript Modal -->
-            <div id="transcript-modal" class="modal hidden">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Full Transcript</h3>
-                        <button class="close-btn" id="close-transcript-modal">&times;</button>
-                    </div>
-                    <div class="modal-body" id="transcript-modal-body"></div>
-                </div>
-            </div>
-
-            <!-- Step 4: Quiz Section -->
-            <section id="quiz-section" class="section hidden">
-                <div class="quiz-header">
-                    <h2>Knowledge Quiz</h2>
-                    <div class="quiz-progress">
-                        <span id="quiz-progress-text">Question 1 of 5</span>
-                    </div>
-                </div>
-                <div id="quiz-container"></div>
-            </section>
-
-            <!-- Step 5: Results Section -->
-            <section id="results-section" class="section hidden">
-                <div class="results-header">
-                    <h2>Quiz Results</h2>
-                    <div class="score-display">
-                        <div class="score-circle">
-                            <span id="score-percentage">0%</span>
-                        </div>
-                        <p id="score-message">Great job!</p>
-                    </div>
-                </div>
-                <div id="results-details"></div>
-                <div class="action-buttons">
-                    <button id="retake-quiz-btn" class="btn btn-primary">Retake Quiz</button>
-                    <button id="new-video-btn" class="btn btn-secondary">Analyze New Video</button>
-                </div>
-                <div class="history-section">
-                    <h3>Previous Attempts</h3>
-                    <div id="attempt-history"></div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <p>Built with ❤️ for better learning</p>
-        </footer>
-    </div>
-
-    <script src="youtube-embed.js"></script>
-    <script src="app.js"></script>
-    <script src="language-dropdown.js"></script>
-</body>
-</html>
-
+console.log('Marquee update completed!');

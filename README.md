@@ -1,13 +1,20 @@
 # ClipLingo 🎬
 
-Transform YouTube videos into interactive learning experiences with automatic summarization and quiz generation.
+Transform YouTube videos into interactive language learning experiences with automatic summarization and multilingual quiz generation.
 
 ## Features
 
+🌍 **Language Learning**
+- **15+ Languages Supported**: English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Dutch, Polish, Turkish
+- **Smart Language Selection**: Auto-detects video captions, choose your quiz language
+- **Learn Any Language**: Watch videos in any language, get quizzes in your preferred language
+- **Perfect for Language Learners**: Ideal for immersion and comprehension practice
+
 ✨ **YouTube Integration**
-- Paste any YouTube URL to get started
+- Paste any YouTube URL to automatically fetch transcripts
+- Powered by Supadata API for real transcript fetching
 - Extract video ID from various URL formats
-- Serverless endpoint stub for transcript fetching
+- Supports auto-generated and manual captions in multiple languages
 
 📝 **Manual Transcript Fallback**
 - Paste transcripts directly (from YouTube's "Show transcript" feature)
@@ -52,31 +59,39 @@ Transform YouTube videos into interactive learning experiences with automatic su
 
 ## Setup
 
-### 1. Configure AI API (Required)
+### 1. Configure API Keys (Pre-configured!)
 
-ClipLingo uses AI to generate summaries and quizzes. **Google Gemini is pre-configured and ready to use!**
+ClipLingo is **ready to use out of the box** with pre-configured API keys:
 
-The app is currently set to use:
+**🎉 YouTube Transcript Fetching:**
+- **Provider:** Supadata API
+- **Status:** Configured ✅
+- **Features:** Auto-generated & manual captions
+
+**🤖 AI Processing:**
 - **Provider:** Google Gemini
-- **Model:** gemini-1.5-flash
-- **API Key:** Already configured ✅
+- **Model:** gemini-2.5-flash
+- **Status:** Configured ✅
 - **Cost:** FREE (no credit card needed)
 
-**You can start using the app immediately!** Or choose a different provider:
+**You can start using the app immediately!** Both APIs are ready to go.
+
+#### Want to Use Your Own Keys?
 
 1. Open `app.js`
 2. Find the `API_CONFIG` section at the top
-3. Change provider or add your own key:
+3. Replace with your own keys:
 
 ```javascript
 const API_CONFIG = {
     provider: 'gemini', // or 'openai', 'claude', 'custom'
-    geminiKey: 'AIzaSyAmN-UQj8OooKWUvEELTDVU6g7TiL0kNGA', // Already set!
-    geminiModel: 'gemini-1.5-flash',
+    geminiKey: 'YOUR_GEMINI_KEY',
+    geminiModel: 'gemini-2.5-flash',
+    supadataKey: 'YOUR_SUPADATA_KEY', // For YouTube transcripts
 };
 ```
 
-**📖 See [API_SETUP.md](API_SETUP.md) for other providers (OpenAI, Claude, custom)**
+**📖 See [API_SETUP.md](API_SETUP.md) for other AI providers (OpenAI, Claude, custom)**
 
 ### 2. Start the App
 
@@ -90,33 +105,40 @@ Open http://localhost:8000 in your browser.
 
 ## How to Use
 
-1. **Good news: Gemini API is already configured!** Just start using it. (See Setup to change providers)
+1. **Good news: All APIs are configured!** Just start using the app immediately.
 
-2. **Choose Input Method:**
-   - **Option A**: Paste a YouTube URL and click "Fetch Transcript" (note: stub will suggest manual paste)
-   - **Option B**: Paste a transcript manually (recommended)
+2. **Select Your Quiz Language:**
+   - Choose the language for quizzes and summaries (video language is auto-detected)
+   - Example: Spanish video → English quiz (test comprehension)
+   - Example: English video → Spanish quiz (practice Spanish)
+   - Example: French video → French quiz (full immersion)
 
-3. **Get Transcript from YouTube:**
+3. **Choose Input Method:**
+   - **Option A**: Paste a YouTube URL and click "Fetch Transcript" ⭐ **Now fully functional!**
+   - **Option B**: Paste a transcript manually (backup option)
+
+4. **Get Transcript from YouTube:**
    - Go to any YouTube video
    - Click the "..." menu below the video
    - Click "Show transcript"
    - Copy all the text (timestamps will be cleaned automatically)
    - Paste into ClipLingo's manual transcript field
 
-4. **View Summary:**
-   - Read the auto-generated key points
+5. **View Summary:**
+   - Read the auto-generated key points (in your selected quiz language)
    - Click "View Full Transcript" to see cleaned version
    - Click "Start Quiz" when ready
 
-5. **Take the Quiz:**
+6. **Take the Quiz:**
    - Answer 5 questions (3 multiple choice, 2 fill-in-blank)
    - Get immediate feedback with explanations
    - View your score and detailed results
 
-6. **Track Progress:**
+7. **Track Progress:**
    - Previous attempts are saved automatically
    - Compare scores over time
    - Retake quiz with shuffled questions
+   - Practice the same content in different languages
 
 ## Technical Details
 
@@ -128,9 +150,11 @@ Open http://localhost:8000 in your browser.
 
 ### Algorithms
 - **URL Parsing**: Regex-based YouTube ID extraction
+- **Transcript Fetching**: Supadata API integration for real-time YouTube caption retrieval
 - **Text Cleaning**: Multi-pattern timestamp removal, whitespace normalization
 - **Tokenization**: Sentence boundary detection with international text support
 - **AI Integration**: 
+  - Google Gemini (gemini-2.5-flash) - primary provider
   - OpenAI GPT-4o/GPT-4o-mini support
   - Claude (Anthropic) support
   - Custom backend API support
@@ -161,17 +185,22 @@ ClipLingo/
 
 ## Extending the App
 
-### Adding Real Transcript API
+### Transcript API (Already Integrated!)
 
-Replace the stub in `app.js` at the `fetchTranscript()` function:
+The app now uses **Supadata API** for fetching YouTube transcripts. The implementation at `fetchTranscript()` function handles:
+- Auto-generated captions
+- Manual/native captions  
+- Error handling with fallback to manual paste
+- Support for multiple languages
 
+To customize transcript fetching behavior, edit the `mode` parameter in `app.js`:
 ```javascript
-async function fetchTranscript(videoId) {
-    const response = await fetch(`https://your-api.com/transcript/${videoId}`);
-    if (!response.ok) throw new Error('Failed to fetch transcript');
-    const data = await response.json();
-    return data.transcript;
-}
+body: JSON.stringify({
+    url: youtubeUrl,
+    lang: 'en',        // Change language
+    text: true,
+    mode: 'auto'       // 'native', 'auto', or 'generate'
+})
 ```
 
 ### Customizing Quiz Generation
@@ -220,6 +249,23 @@ MIT License - Feel free to use, modify, and distribute!
 ## Credits
 
 Built with ❤️ for better learning experiences.
+
+---
+
+## Language Learning Use Cases
+
+### 📚 For Language Learners:
+- **Comprehension Practice**: Watch foreign language videos → Quiz in your native language
+- **Production Practice**: Watch any video → Quiz in your target language
+- **Immersion Mode**: Watch and quiz in the same language for full immersion
+- **Vocabulary Building**: Learn new words and phrases in context
+- **Auto-Detection**: No need to specify video language - captions are automatically detected
+
+### 🎯 Example Scenarios:
+1. **Spanish Learner**: Watch Spanish cooking video → Set quiz to English (test comprehension)
+2. **English Practice**: Watch English TED talk → Set quiz to Spanish (practice Spanish)
+3. **French Immersion**: Watch French documentary → Set quiz to French (advanced practice)
+4. **Multi-Language**: Use the same video with different quiz languages to compare understanding
 
 ---
 
