@@ -191,9 +191,9 @@ Focus on:
 Difficulty-based rules:
 - BEGINNER: Summary mostly IL with 1-2 TL words (with IL translations). Quiz: 5-6 questions in IL with 1-2 TL words. 3-4 vocabulary words.
 - INTERMEDIATE: Summary balanced IL/TL mix. Quiz: 6-7 questions mixing both languages. 4-5 vocabulary words.
-- ADVANCED: Summary mostly TL with IL support. Quiz: 7-8 questions mostly TL with IL hints. 5-6 vocabulary words.
+- ADVANCED: Summary mostly TL with IL support. Quiz: 7-8 questions mostly TL with IL hints. 5-6 vocabulary words. No pronounciation aids for TL.
 
-Format: Use HTML tags. Add pronunciation aids for TL
+Format: Use only basic HTML tags. Add pronunciation aids for TL and only for TL.
 
 Transcript: ${transcript}`;
 
