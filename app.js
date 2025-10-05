@@ -31,7 +31,6 @@ const API_CONFIG = {
     // Google Gemini API
     geminiKey: 'AIzaSyAmN-UQj8OooKWUvEELTDVU6g7TiL0kNGA',
     geminiModel: 'gemini-2.5-flash', // Stable version - or try 'gemini-flash-latest'
-    
 
     // Supadata API for YouTube transcripts
     supadataKey: 'sd_54bdba6597b2544d5aba402554e7220b',
@@ -157,15 +156,7 @@ async function callGemini(transcript) {
     const difficulty = state.difficultyLevel || 'intermediate';
     
     // Console logging for debugging
-    console.log('=== AI REQUEST DEBUG INFO ===');
-    console.log('Target Language:', targetLang);
-    console.log('Native Language:', nativeLang);
-    console.log('Difficulty Level:', difficulty);
-    console.log('Transcript Length:', transcript.length);
-    console.log('Transcript Preview (first 200 chars):', transcript.substring(0, 200));
-    console.log('Transcript Preview (last 200 chars):', transcript.substring(transcript.length - 200));
-    console.log('================================');
-    
+
     const prompt = `
 
 Generate progressive language learning content at difficulty Level=${difficulty}) from the transcript.
@@ -206,9 +197,6 @@ RULES:
 Transcript:
 ${transcript}`
     // Log the complete prompt being sent to AI
-    console.log('=== COMPLETE PROMPT SENT TO AI ===');
-    console.log(prompt);
-    console.log('=== END PROMPT ===');
 
     // Use Google GenAI SDK
     const response = await ai.models.generateContent({
@@ -225,21 +213,14 @@ ${transcript}`
         }
     });
 
-    console.log('Gemini full response:', response);
-    
     // Log token usage if available
     if (response.usageMetadata) {
-        console.log('Token usage:', {
-            promptTokens: response.usageMetadata.promptTokenCount,
-            responseTokens: response.usageMetadata.candidatesTokenCount,
-            totalTokens: response.usageMetadata.totalTokenCount,
-        });
+        
     }
     
     // Extract text from Gemini response
     let text = response.text;
-    console.log('Gemini raw response:', text);
-    
+
     // Extract JSON from markdown code blocks if present
     // Try multiple patterns to extract JSON
     let jsonString = text;
@@ -261,11 +242,7 @@ ${transcript}`
             }
         }
     }
-    
-    console.log('Extracted JSON string length:', jsonString.length);
-    console.log('Extracted JSON string (first 200 chars):', jsonString.substring(0, 200) + '...');
-    console.log('Extracted JSON string (last 200 chars):', '...' + jsonString.substring(jsonString.length - 200));
-    
+
     try {
         const parsed = JSON.parse(jsonString);
         
@@ -302,13 +279,7 @@ async function fetchTranscript(videoId) {
     try {
         // Construct YouTube URL from video ID
         const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-        
-        console.log('=== TRANSCRIPT FETCHING DEBUG ===');
-        console.log('Fetching transcript from:', youtubeUrl);
-        console.log('Requesting transcript in language:', state.targetLanguage);
-        console.log('Native language setting:', state.nativeLanguage);
-        console.log('==================================');
-        
+
         // Use Supadata SDK with language selection
         const response = await supadata.transcript({
             url: youtubeUrl,
@@ -316,9 +287,7 @@ async function fetchTranscript(videoId) {
             text: true, // Return plain text instead of timestamped chunks
             mode: "auto", // Auto-detect or generate captions
         });
-        
-        console.log('Supadata response:', response);
-        
+
         // Extract transcript text from response
         let transcript = '';
         
@@ -342,8 +311,7 @@ async function fetchTranscript(videoId) {
         if (!transcript || typeof transcript !== 'string' || transcript.trim().length < 50) {
             throw new Error(`No transcript available in ${state.targetLanguage}. The video may not have captions in this language. Please try manual paste.`);
         }
-        
-        console.log('Successfully fetched transcript, length:', transcript.length);
+
         return transcript;
         
     } catch (error) {
@@ -420,9 +388,7 @@ async function handleFetchTranscript() {
 function handleManualTranscript() {
     const textarea = document.getElementById('manual-transcript');
     const transcript = textarea.value.trim();
-    
-    console.log('Manual transcript length:', transcript.length);
-    
+
     hideError('url-error');
     
     if (!transcript) {
@@ -436,8 +402,7 @@ function handleManualTranscript() {
     }
     
     state.rawTranscript = transcript;
-    console.log('Raw transcript set:', state.rawTranscript.substring(0, 100) + '...');
-    
+
     // Try to extract video ID from URL if provided
     const urlInput = document.getElementById('youtube-url');
     const url = urlInput.value.trim();
@@ -445,8 +410,7 @@ function handleManualTranscript() {
         state.videoId = extractVideoId(url);
         state.videoUrl = url;
     }
-    
-    console.log('Starting processTranscript...');
+
     processTranscript();
 }
 
@@ -455,28 +419,26 @@ function handleManualTranscript() {
  */
 async function processTranscript() {
     // Show processing section
-    console.log('Showing processing section...');
+    
     showSection('processing-section');
     
     try {
         // Step 1: Clean transcript
-        console.log('Step 1: Cleaning transcript...');
+        
         updateProcessingStatus('Cleaning transcript...');
         
         state.cleanTranscript = cleanTranscript(state.rawTranscript);
-        console.log('Cleaned transcript length:', state.cleanTranscript.length);
-        
+
         if (state.cleanTranscript.length < 50) {
             throw new Error('Cleaned transcript is too short to process');
         }
         
         // Step 2: Send to AI for processing
-        console.log('Step 2: Sending to AI...');
+        
         updateProcessingStatus('Analyzing content with AI...');
         
         const aiResult = await callGemini(state.cleanTranscript);
-        console.log('AI processing complete:', aiResult);
-        
+
         // Validate AI response
         if (!aiResult.summary || !Array.isArray(aiResult.summary)) {
             throw new Error('Invalid AI response: missing summary');
@@ -491,7 +453,7 @@ async function processTranscript() {
         }
         
         // Step 3: Store results
-        console.log('Step 3: Processing AI results...');
+        
         updateProcessingStatus('Preparing your learning materials...');
         
         // Store summary array directly (AI already provides array)
@@ -505,12 +467,9 @@ async function processTranscript() {
             ...q,
             id: `ai_q_${idx}`
         }));
-        
-        console.log('Summary points:', state.summary.length);
-        console.log('Quiz questions:', state.quiz.length);
-        
+
         // Step 4: Display results
-        console.log('Displaying summary...');
+        
         displaySummary();
         showSection('summary-section');
         
@@ -777,7 +736,6 @@ function displayResults() {
     showSection('results-section');
 }
 
-
 /**
  * Save quiz attempt to localStorage
  */
@@ -874,15 +832,14 @@ function handleNewVideo() {
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded - attaching event listeners...');
-    
+
     // Target language selection (language to learn)
     const targetLanguageSelect = document.getElementById('target-language');
     
     if (targetLanguageSelect) {
         targetLanguageSelect.addEventListener('change', (e) => {
             state.targetLanguage = e.target.value;
-            console.log('Target learning language changed to:', state.targetLanguage);
+            
         });
     }
     
@@ -895,23 +852,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (difficultyLevelSelect) {
         difficultyLevelSelect.addEventListener('change', (e) => {
             state.difficultyLevel = e.target.value;
-            console.log('Fluency level changed to:', state.difficultyLevel);
+            
         });
     }
     
     // Fetch transcript button
     const fetchBtn = document.getElementById('fetch-transcript-btn');
-    console.log('Fetch button:', fetchBtn);
+    
     if (fetchBtn) {
         fetchBtn.addEventListener('click', handleFetchTranscript);
     }
     
     // Process manual transcript button
     const processBtn = document.getElementById('process-manual-btn');
-    console.log('Process button:', processBtn);
+    
     if (processBtn) {
         processBtn.addEventListener('click', () => {
-            console.log('Process button clicked!');
+            
             handleManualTranscript();
         });
     }
@@ -949,7 +906,6 @@ document.addEventListener('DOMContentLoaded', () => {
             handleFetchTranscript();
         }
     });
-    
-    console.log('ClipLingo initialized successfully!');
+
 });
 
