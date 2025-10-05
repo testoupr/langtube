@@ -351,7 +351,63 @@
         <main class="main">
             <!-- Step 1: Input Section -->
             <section id="input-section" class="section active">
-                <h2>Get Started</h2>
+                <div class="section-header">
+                    <h2>Get Started</h2>
+                    <div class="language-controls-inline">
+                        <div class="language-control">
+                            <label for="target-language">Learn:</label>
+                            <select id="target-language" aria-label="Select quiz language">
+                                <option value="en">English</option>
+                                <option value="ar">Arabic (العربية)</option>
+                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="bg">Bulgarian (Български)</option>
+                                <option value="zh">Chinese (中文)</option>
+                                <option value="hr">Croatian (Hrvatski)</option>
+                                <option value="cs">Czech (Čeština)</option>
+                                <option value="da">Danish (Dansk)</option>
+                                <option value="nl">Dutch (Nederlands)</option>
+                                <option value="et">Estonian (Eesti)</option>
+                                <option value="fi">Finnish (Suomi)</option>
+                                <option value="fr">French (Français)</option>
+                                <option value="de">German (Deutsch)</option>
+                                <option value="el">Greek (Ελληνικά)</option>
+                                <option value="he">Hebrew (עברית)</option>
+                                <option value="hi">Hindi (हिन्दी)</option>
+                                <option value="hu">Hungarian (Magyar)</option>
+                                <option value="id">Indonesian (Bahasa Indonesia)</option>
+                                <option value="it">Italian (Italiano)</option>
+                                <option value="ja">Japanese (日本語)</option>
+                                <option value="ko">Korean (한국어)</option>
+                                <option value="lv">Latvian (Latviešu)</option>
+                                <option value="lt">Lithuanian (Lietuvių)</option>
+                                <option value="no">Norwegian (Norsk)</option>
+                                <option value="pl">Polish (Polski)</option>
+                                <option value="pt">Portuguese (Português)</option>
+                                <option value="ro">Romanian (Română)</option>
+                                <option value="ru">Russian (Русский)</option>
+                                <option value="sr">Serbian (Српски)</option>
+                                <option value="sk">Slovak (Slovenčina)</option>
+                                <option value="sl">Slovenian (Slovenščina)</option>
+                                <option value="es">Spanish (Español)</option>
+                                <option value="sw">Swahili (Kiswahili)</option>
+                                <option value="sv">Swedish (Svenska)</option>
+                                <option value="th">Thai (ไทย)</option>
+                                <option value="tr">Turkish (Türkçe)</option>
+                                <option value="uk">Ukrainian (Українська)</option>
+                                <option value="vi">Vietnamese (Tiếng Việt)</option>
+                            </select>
+                        </div>
+                        <div class="language-control">
+                            <label for="difficulty-level">Level:</label>
+                            <select id="difficulty-level" aria-label="Select difficulty level">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate" selected>Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="input-group">
                     <label for="youtube-url">YouTube URL</label>
                     <div class="url-input-wrapper">
@@ -367,56 +423,6 @@
                         </button>
                     </div>
                     <div class="error-message hidden" id="url-error"></div>
-                </div>
-
-                <!-- Language Selection -->
-                <div class="language-selection">
-                    <div class="input-group language-group-single">
-                        <label for="target-language">
-                            <span class="label-main">Quiz & Summary Language</span>
-                            <span class="label-hint">Choose the language for questions and summaries</span>
-                        </label>
-                        <select id="target-language" aria-label="Select quiz language">
-                            <option value="en">English</option>
-                            <option value="ar">Arabic (العربية)</option>
-                            <option value="bn">Bengali (বাংলা)</option>
-                            <option value="bg">Bulgarian (Български)</option>
-                            <option value="zh">Chinese (中文)</option>
-                            <option value="hr">Croatian (Hrvatski)</option>
-                            <option value="cs">Czech (Čeština)</option>
-                            <option value="da">Danish (Dansk)</option>
-                            <option value="nl">Dutch (Nederlands)</option>
-                            <option value="et">Estonian (Eesti)</option>
-                            <option value="fi">Finnish (Suomi)</option>
-                            <option value="fr">French (Français)</option>
-                            <option value="de">German (Deutsch)</option>
-                            <option value="el">Greek (Ελληνικά)</option>
-                            <option value="he">Hebrew (עברית)</option>
-                            <option value="hi">Hindi (हिन्दी)</option>
-                            <option value="hu">Hungarian (Magyar)</option>
-                            <option value="id">Indonesian (Bahasa Indonesia)</option>
-                            <option value="it">Italian (Italiano)</option>
-                            <option value="ja">Japanese (日本語)</option>
-                            <option value="ko">Korean (한국어)</option>
-                            <option value="lv">Latvian (Latviešu)</option>
-                            <option value="lt">Lithuanian (Lietuvių)</option>
-                            <option value="no">Norwegian (Norsk)</option>
-                            <option value="pl">Polish (Polski)</option>
-                            <option value="pt">Portuguese (Português)</option>
-                            <option value="ro">Romanian (Română)</option>
-                            <option value="ru">Russian (Русский)</option>
-                            <option value="sr">Serbian (Српски)</option>
-                            <option value="sk">Slovak (Slovenčina)</option>
-                            <option value="sl">Slovenian (Slovenščina)</option>
-                            <option value="es">Spanish (Español)</option>
-                            <option value="sw">Swahili (Kiswahili)</option>
-                            <option value="sv">Swedish (Svenska)</option>
-                            <option value="th">Thai (ไทย)</option>
-                            <option value="tr">Turkish (Türkçe)</option>
-                            <option value="uk">Ukrainian (Українська)</option>
-                            <option value="vi">Vietnamese (Tiếng Việt)</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="divider">
@@ -449,7 +455,6 @@
             <!-- Step 3: Summary Section -->
             <section id="summary-section" class="section hidden">
                 <h2>Video Summary</h2>
-                <div class="video-info" id="video-info"></div>
                 <div class="summary-content" id="summary-content"></div>
                 <div class="action-buttons">
                     <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
@@ -490,6 +495,14 @@
                         <p id="score-message">Great job!</p>
                     </div>
                 </div>
+                
+                <!-- YouTube Video Section -->
+                <div id="youtube-video-section" class="youtube-video-section hidden">
+                    <h3>📺 Video with Timestamps</h3>
+                    <div id="youtube-video-container"></div>
+                    <div id="timestamp-navigation" class="timestamp-navigation"></div>
+                </div>
+                
                 <div id="results-details"></div>
                 <div class="action-buttons">
                     <button id="retake-quiz-btn" class="btn btn-primary">Retake Quiz</button>
@@ -508,7 +521,10 @@
     </div>
 
     <script src="youtube-embed.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
+    <script nomodule>
+        alert('Your browser does not support ES6 modules. Please use a modern browser like Chrome, Firefox, or Safari.');
+    </script>
     <script src="language-dropdown.js"></script>
 </body>
 </html>

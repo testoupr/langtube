@@ -166,7 +166,9 @@ async function callGemini(transcript) {
     console.log('Transcript Preview (last 200 chars):', transcript.substring(transcript.length - 200));
     console.log('================================');
     
-    const prompt = `Create progressive language learning content from this transcript for ${difficulty} level learners.
+    const prompt = `
+
+Generate progressive language learning content at difficulty Level=${difficulty}) from the transcript.
 
 SYSTEM INSTRUCTIONS: We will use ISO 639-1 two-letter codes. For the purpose of these rules, we will use two functional labels:
 - IL (Instruction Language): The language for explanations, summaries, and quiz questions.
@@ -177,26 +179,32 @@ CURRENT SCENARIO:
 - TL = ${targetLang}
 - When IL and TL are the same, IL = standard version of the language, and TL = advanced version of the language
 
-Return JSON:
+CONTEXT: URL=${state.videoUrl || 'N/A'}, ID=${state.videoId || 'N/A'}.
+
+OUTPUT ONLY JSON, following this exact schema:
 {
   "summary": ["5 key points with progressive TL integration"],
-  "vocabulary": [{"word": "word in TL", "definition": "definition in IL", "example": "example mixing both languages"}],
-  "quiz": [{"question": "question mixing IL and TL", "options": ["A","B","C","D"], "correctAnswer": 0, "explanation": "explanation in IL"}]
+  "vocabulary": [{"word": "TL word", "definition": "IL def", "example": "mixed example", "pronunciation": "aid"}],
+  "quiz": [{
+    "question": "mixed IL/TL text",
+    "options": ["A","B","C","D"],
+    "correctAnswer": 0,
+    "explanation": "IL text",
+    "youtubeUrl": "https://youtube.com/watch?v=${state.videoId}&t=MMmSSs"
+  }]
 }
-Focus on:
- - Vocabulary: word meanings, synonyms, usage in context
- - Grammar: sentence structure, verb tenses, prepositions
- - Comprehension: main ideas, details, inference
 
-Difficulty-based rules:
-- BEGINNER: Summary mostly IL with 1-2 TL words (with IL translations). Quiz: 5-6 questions in IL with 1-2 TL words. 3-4 vocabulary words.
-- INTERMEDIATE: Summary balanced IL/TL mix. Quiz: 6-7 questions mixing both languages. 4-5 vocabulary words.
-- ADVANCED: Summary mostly TL with IL support. Quiz: 7-8 questions mostly TL with IL hints. 5-6 vocabulary words. No pronounciation aids for TL.
+RULES:
+1. Difficulty (${difficulty}) governs TL/IL mix and vocabulary count in questions (Beginner: 3-4 vocab, mostly IL; Intermediate: 4-5 vocab, balanced; Advanced: 5-6 vocab, mostly TL).
+2. Vocabulary: 4/6/8 words (based on difficulty)
+3. Quiz: 5/6/7 questions (based on difficulty) 
+4. Focus on Vocabulary, Grammar, and Comprehension.
+5. Use ONLY <strong>bold</strong> for styling, DO NOT USE MARKDOWN (concepts, words, words in TL).
+6. Include pronunciation aids only for words in TL, and exclude them entirely when Level=${difficulty} is ADVANCED.
+7. Find the most relevant timestamp (&t=MMmSSs) for each quiz question.
 
-Format: Use only basic HTML tags. Add pronunciation aids for TL and only for TL.
-
-Transcript: ${transcript}`;
-
+Transcript:
+${transcript}`
     // Log the complete prompt being sent to AI
     console.log('=== COMPLETE PROMPT SENT TO AI ===');
     console.log(prompt);
@@ -533,21 +541,7 @@ function updateProcessingStatus(message) {
  * Display summary section
  */
 function displaySummary() {
-    const videoInfoEl = document.getElementById('video-info');
     const summaryContentEl = document.getElementById('summary-content');
-    
-    // Display video info if available
-    if (state.videoId) {
-        videoInfoEl.innerHTML = `
-            <h3>Video Information</h3>
-            <p>Video ID: ${state.videoId}</p>
-            ${state.videoUrl ? `<p><a href="${state.videoUrl}" target="_blank" rel="noopener">Watch on YouTube</a></p>` : ''}
-        `;
-    } else {
-        videoInfoEl.innerHTML = `
-            <h3>AI-Generated Content Summary</h3>
-        `;
-    }
     
     // Display summary - AI already returns array of points
     let summaryPoints;
@@ -563,13 +557,13 @@ function displaySummary() {
     }
     
     summaryContentEl.innerHTML = `
-        <h3>Key Points</h3>
-        <ul>
-            ${summaryPoints.map(point => `<li>${point}</li>`).join('')}
-        </ul>
+        <div class="key-points-box">
+            <ul>
+                ${summaryPoints.map(point => `<li>${point}</li>`).join('')}
+            </ul>
+        </div>
         
-        <h3 style="margin-top: 2rem;">Key Vocabulary</h3>
-        <div class="vocabulary-list">
+        <div class="vocabulary-list" style="margin-top: 1.5rem;">
             ${state.vocabulary.map(vocab => `
                 <div class="vocabulary-item">
                     <div class="vocab-word"><strong>${vocab.word}</strong></div>
@@ -742,6 +736,9 @@ function displayResults() {
         messageEl.textContent = 'Keep learning! Try watching the video again.';
     }
     
+    // Setup YouTube video with timestamps
+    setupYouTubeVideoWithTimestamps(state.quiz);
+    
     // Display detailed results
     const detailsEl = document.getElementById('results-details');
     detailsEl.innerHTML = state.answers.map((answer, idx) => {
@@ -779,6 +776,7 @@ function displayResults() {
     // Show results section
     showSection('results-section');
 }
+
 
 /**
  * Save quiz attempt to localStorage
@@ -888,15 +886,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Native language selection (for explanations and quiz)
-    const nativeLanguageSelect = document.getElementById('native-language');
-    
-    if (nativeLanguageSelect) {
-        nativeLanguageSelect.addEventListener('change', (e) => {
-            state.nativeLanguage = e.target.value;
-            console.log('Native language changed to:', state.nativeLanguage);
-        });
-    }
+    // Native language is now set by the language dropdown navigation
+    // No separate native language selector needed
     
     // Difficulty level selection (fluency in target language)
     const difficultyLevelSelect = document.getElementById('difficulty-level');

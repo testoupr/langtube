@@ -11,19 +11,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Language mapping for current page detection
     const languageMap = {
-        'index.html': { flag: '🇺🇸', name: 'English' },
-        'spanish.html': { flag: '🇪🇸', name: 'Español' },
-        'french.html': { flag: '🇫🇷', name: 'Français' },
-        'german.html': { flag: '🇩🇪', name: 'Deutsch' },
-        'chinese.html': { flag: '🇨🇳', name: '中文' },
-        'japanese.html': { flag: '🇯🇵', name: '日本語' },
-        'korean.html': { flag: '🇰🇷', name: '한국어' },
-        'arabic.html': { flag: '🇸🇦', name: 'العربية' },
-        'hindi.html': { flag: '🇮🇳', name: 'हिन्दी' },
-        'portuguese.html': { flag: '🇵🇹', name: 'Português' },
-        'russian.html': { flag: '🇷🇺', name: 'Русский' },
-        'italian.html': { flag: '🇮🇹', name: 'Italiano' },
-        'languages.html': { flag: '🌍', name: 'All Languages' }
+        'index.html': { flag: '🇺🇸', name: 'English', code: 'en' },
+        'spanish.html': { flag: '🇪🇸', name: 'Español', code: 'es' },
+        'french.html': { flag: '🇫🇷', name: 'Français', code: 'fr' },
+        'german.html': { flag: '🇩🇪', name: 'Deutsch', code: 'de' },
+        'chinese.html': { flag: '🇨🇳', name: '中文', code: 'zh' },
+        'japanese.html': { flag: '🇯🇵', name: '日本語', code: 'ja' },
+        'korean.html': { flag: '🇰🇷', name: '한국어', code: 'ko' },
+        'arabic.html': { flag: '🇸🇦', name: 'العربية', code: 'ar' },
+        'hindi.html': { flag: '🇮🇳', name: 'हिन्दी', code: 'hi' },
+        'portuguese.html': { flag: '🇵🇹', name: 'Português', code: 'pt' },
+        'russian.html': { flag: '🇷🇺', name: 'Русский', code: 'ru' },
+        'italian.html': { flag: '🇮🇹', name: 'Italiano', code: 'it' },
+        'languages.html': { flag: '🌍', name: 'All Languages', code: 'en' }
     };
     
     // Set current language based on current page
@@ -33,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (currentLang) {
         currentLanguage.textContent = `${currentLang.flag} ${currentLang.name}`;
         dropdownBtn.classList.add('active');
+        
+        // Set native language in global state if it exists
+        if (typeof state !== 'undefined' && currentLang.code) {
+            state.nativeLanguage = currentLang.code;
+            console.log('Native language set on page load to:', currentLang.code);
+        }
     }
     
     // Toggle dropdown
@@ -55,6 +61,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const option = e.target.closest('.language-option');
         if (option) {
             const href = option.getAttribute('href');
+            const langCode = option.getAttribute('data-lang');
+            
+            // Set native language in global state if it exists
+            if (typeof state !== 'undefined' && langCode) {
+                state.nativeLanguage = langCode;
+                console.log('Native language set to:', langCode);
+            }
+            
             if (href && href !== window.location.pathname.split('/').pop()) {
                 // Add a small delay for visual feedback
                 option.style.background = 'var(--primary-color)';

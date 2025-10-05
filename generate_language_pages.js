@@ -283,7 +283,6 @@ function generateLanguagePage(langCode, langConfig) {
             <!-- Step 3: Summary Section -->
             <section id="summary-section" class="section hidden">
                 <h2>${content['Video Summary']}</h2>
-                <div class="video-info" id="video-info"></div>
                 <div class="summary-content" id="summary-content"></div>
                 <div class="action-buttons">
                     <button id="start-quiz-btn" class="btn btn-primary">${content['Start Quiz']}</button>

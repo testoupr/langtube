@@ -45,56 +45,102 @@ function extractTimestampFromUrl(url) {
 }
 
 /**
- * Create YouTube embed HTML from URL
+ * Setup YouTube video with clickable timestamps
  */
-function createYouTubeEmbedFromUrl(youtubeUrl) {
-    const videoId = extractVideoIdFromUrl(youtubeUrl);
-    const timestamp = extractTimestampFromUrl(youtubeUrl);
+function setupYouTubeVideoWithTimestamps(quizData) {
+    const videoSection = document.getElementById('youtube-video-section');
+    const videoContainer = document.getElementById('youtube-video-container');
+    const timestampNav = document.getElementById('timestamp-navigation');
     
-    if (!videoId) {
-        return '';
-    }
+    // Collect all unique YouTube URLs with timestamps from quiz questions
+    const videoTimestamps = [];
+    const seenUrls = new Set();
     
-    // Extract seconds from timestamp for embed
-    let startSeconds = 0;
-    if (timestamp) {
-        const parts = timestamp.split(':').map(Number);
-        if (parts.length === 2) {
-            startSeconds = parts[0] * 60 + parts[1];
+    quizData.forEach((question, index) => {
+        if (question.youtubeUrl && !seenUrls.has(question.youtubeUrl)) {
+            seenUrls.add(question.youtubeUrl);
+            const timestamp = extractTimestampFromUrl(question.youtubeUrl);
+            const videoId = extractVideoIdFromUrl(question.youtubeUrl);
+            
+            if (videoId) {
+                videoTimestamps.push({
+                    questionIndex: index + 1,
+                    timestamp: timestamp,
+                    seconds: timestampToSeconds(timestamp),
+                    videoId: videoId,
+                    question: question.question.substring(0, 50) + '...'
+                });
+            }
         }
-    } else {
-        // Try to extract seconds directly from URL if timestamp parsing failed
-        const directSecondsMatch = youtubeUrl.match(/[?&]t=(\d+)s?/);
-        if (directSecondsMatch) {
-            startSeconds = parseInt(directSecondsMatch[1]);
-        }
+    });
+    
+    if (videoTimestamps.length === 0) {
+        videoSection.classList.add('hidden');
+        return;
     }
     
-    // Also try to extract MMmSSs format directly from URL
-    const mmssMatch = youtubeUrl.match(/[?&]t=(\d+)m(\d+)s/);
-    if (mmssMatch) {
-        const minutes = parseInt(mmssMatch[1]);
-        const seconds = parseInt(mmssMatch[2]);
-        startSeconds = minutes * 60 + seconds;
-    }
+    // Show video section
+    videoSection.classList.remove('hidden');
     
-    return `
-        <div class="youtube-embed-container">
-            <iframe 
-                width="560" 
-                height="315" 
-                src="https://www.youtube.com/embed/${videoId}?start=${startSeconds}&autoplay=0&rel=0&modestbranding=1" 
-                title="YouTube video player" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-            ${timestamp ? `
-                <div class="timestamp-info">
-                    <span class="timestamp-label">Relevant timestamp:</span>
-                    <span class="timestamp-value">${timestamp}</span>
-                </div>
-            ` : ''}
-        </div>
+    // Get the first video ID for the main embed
+    const mainVideoId = videoTimestamps[0].videoId;
+    
+    // Create main video embed
+    videoContainer.innerHTML = `
+        <iframe 
+            id="main-youtube-video"
+            width="100%" 
+            height="450" 
+            src="https://www.youtube.com/embed/${mainVideoId}?rel=0&modestbranding=1" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
     `;
+    
+    // Create timestamp navigation buttons
+    timestampNav.innerHTML = videoTimestamps.map((item, index) => `
+        <button class="timestamp-button" data-seconds="${item.seconds}" data-video-id="${item.videoId}">
+            Q${item.questionIndex}
+        </button>
+    `).join('');
+    
+    // Add click handlers for timestamp buttons
+    timestampNav.addEventListener('click', (e) => {
+        if (e.target.classList.contains('timestamp-button')) {
+            const seconds = parseInt(e.target.dataset.seconds);
+            const videoId = e.target.dataset.videoId;
+            
+            // Update active button
+            timestampNav.querySelectorAll('.timestamp-button').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Update video if different video ID
+            const currentVideo = document.getElementById('main-youtube-video');
+            const currentSrc = currentVideo.src;
+            const newSrc = `https://www.youtube.com/embed/${videoId}?start=${seconds}&autoplay=1&rel=0&modestbranding=1`;
+            
+            if (!currentSrc.includes(videoId)) {
+                currentVideo.src = newSrc;
+            } else {
+                // Same video, just seek to timestamp
+                currentVideo.src = newSrc;
+            }
+        }
+    });
 }
+
+/**
+ * Convert timestamp string to seconds
+ */
+function timestampToSeconds(timestamp) {
+    if (!timestamp) return 0;
+    
+    const parts = timestamp.split(':').map(Number);
+    if (parts.length === 2) {
+        return parts[0] * 60 + parts[1];
+    }
+    return 0;
+}
+

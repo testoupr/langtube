@@ -351,88 +351,94 @@
         <main class="main">
             <!-- Step 1: Input Section -->
             <section id="input-section" class="section active">
-                <h2>Comenzar</h2>
+                <div class="section-header">
+                    <h2>Get Started</h2>
+                    <div class="language-controls-inline">
+                        <div class="language-control">
+                            <label for="target-language">Aprender:</label>
+                            <select id="target-language" aria-label="Select quiz language">
+                                <option value="en">English</option>
+                                <option value="ar">Arabic (العربية)</option>
+                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="bg">Bulgarian (Български)</option>
+                                <option value="zh">Chinese (中文)</option>
+                                <option value="hr">Croatian (Hrvatski)</option>
+                                <option value="cs">Czech (Čeština)</option>
+                                <option value="da">Danish (Dansk)</option>
+                                <option value="nl">Dutch (Nederlands)</option>
+                                <option value="et">Estonian (Eesti)</option>
+                                <option value="fi">Finnish (Suomi)</option>
+                                <option value="fr">French (Français)</option>
+                                <option value="de">German (Deutsch)</option>
+                                <option value="el">Greek (Ελληνικά)</option>
+                                <option value="he">Hebrew (עברית)</option>
+                                <option value="hi">Hindi (हिन्दी)</option>
+                                <option value="hu">Hungarian (Magyar)</option>
+                                <option value="id">Indonesian (Bahasa Indonesia)</option>
+                                <option value="it">Italian (Italiano)</option>
+                                <option value="ja">Japanese (日本語)</option>
+                                <option value="ko">Korean (한국어)</option>
+                                <option value="lv">Latvian (Latviešu)</option>
+                                <option value="lt">Lithuanian (Lietuvių)</option>
+                                <option value="no">Norwegian (Norsk)</option>
+                                <option value="pl">Polish (Polski)</option>
+                                <option value="pt">Portuguese (Português)</option>
+                                <option value="ro">Romanian (Română)</option>
+                                <option value="ru">Russian (Русский)</option>
+                                <option value="sr">Serbian (Српски)</option>
+                                <option value="sk">Slovak (Slovenčina)</option>
+                                <option value="sl">Slovenian (Slovenščina)</option>
+                                <option value="es">Spanish (Español)</option>
+                                <option value="sw">Swahili (Kiswahili)</option>
+                                <option value="sv">Swedish (Svenska)</option>
+                                <option value="th">Thai (ไทย)</option>
+                                <option value="tr">Turkish (Türkçe)</option>
+                                <option value="uk">Ukrainian (Українська)</option>
+                                <option value="vi">Vietnamese (Tiếng Việt)</option>
+                            </select>
+                        </div>
+                        <div class="language-control">
+                            <label for="difficulty-level">Nivel:</label>
+                            <select id="difficulty-level" aria-label="Select difficulty level">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate" selected>Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="input-group">
-                    <label for="youtube-url">URL de YouTube</label>
+                    <label for="youtube-url">YouTube URL</label>
                     <div class="url-input-wrapper">
                         <input 
                             type="text" 
                             id="youtube-url" 
                             placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
-                            aria-label="URL del video de YouTube"
+                            aria-label="YouTube video URL"
                         />
                         <button id="fetch-transcript-btn" class="btn btn-primary">
-                            <span class="btn-text">Crear Cuestionario</span>
+                            <span class="btn-text"> Make Quiz</span>
                             <span class="spinner hidden"></span>
                         </button>
                     </div>
                     <div class="error-message hidden" id="url-error"></div>
                 </div>
 
-                <!-- Language Selection -->
-                <div class="language-selection">
-                    <div class="input-group language-group-single">
-                        <label for="target-language">
-                            <span class="label-main">Idioma del Cuestionario y Resumen</span>
-                            <span class="label-hint">Elige el idioma para las preguntas y resúmenes</span>
-                        </label>
-                        <select id="target-language" aria-label="Seleccionar idioma del cuestionario">
-                            <option value="es">Español (Español)</option>
-                            <option value="en">English</option>
-                            <option value="ar">Arabic (العربية)</option>
-                            <option value="bn">Bengali (বাংলা)</option>
-                            <option value="bg">Bulgarian (Български)</option>
-                            <option value="zh">Chinese (中文)</option>
-                            <option value="hr">Croatian (Hrvatski)</option>
-                            <option value="cs">Czech (Čeština)</option>
-                            <option value="da">Danish (Dansk)</option>
-                            <option value="nl">Dutch (Nederlands)</option>
-                            <option value="et">Estonian (Eesti)</option>
-                            <option value="fi">Finnish (Suomi)</option>
-                            <option value="fr">French (Français)</option>
-                            <option value="de">German (Deutsch)</option>
-                            <option value="el">Greek (Ελληνικά)</option>
-                            <option value="he">Hebrew (עברית)</option>
-                            <option value="hi">Hindi (हिन्दी)</option>
-                            <option value="hu">Hungarian (Magyar)</option>
-                            <option value="id">Indonesian (Bahasa Indonesia)</option>
-                            <option value="it">Italian (Italiano)</option>
-                            <option value="ja">Japanese (日本語)</option>
-                            <option value="ko">Korean (한국어)</option>
-                            <option value="lv">Latvian (Latviešu)</option>
-                            <option value="lt">Lithuanian (Lietuvių)</option>
-                            <option value="no">Norwegian (Norsk)</option>
-                            <option value="pl">Polish (Polski)</option>
-                            <option value="pt">Portuguese (Português)</option>
-                            <option value="ro">Romanian (Română)</option>
-                            <option value="ru">Russian (Русский)</option>
-                            <option value="sr">Serbian (Српски)</option>
-                            <option value="sk">Slovak (Slovenčina)</option>
-                            <option value="sl">Slovenian (Slovenščina)</option>
-                            <option value="sw">Swahili (Kiswahili)</option>
-                            <option value="sv">Swedish (Svenska)</option>
-                            <option value="th">Thai (ไทย)</option>
-                            <option value="tr">Turkish (Türkçe)</option>
-                            <option value="uk">Ukrainian (Українська)</option>
-                            <option value="vi">Vietnamese (Tiếng Việt)</option>
-                        </select>
-                    </div>
-                </div>
-
                 <div class="divider">
-                    <span>O</span>
+                    <span>OR</span>
                 </div>
 
                 <div class="input-group">
-                    <label for="manual-transcript">Pegar Transcripción Manualmente</label>
+                    <label for="manual-transcript">Paste Transcript Manually</label>
                     <textarea 
                         id="manual-transcript" 
                         rows="8" 
-                        placeholder="Pega tu transcripción de YouTube aquí (las marcas de tiempo se limpiarán automáticamente)..."
-                        aria-label="Entrada manual de transcripción"
+                        placeholder="Paste your YouTube transcript here (timestamps will be cleaned automatically)..."
+                        aria-label="Manual transcript input"
                     ></textarea>
                     <button id="process-manual-btn" class="btn btn-secondary">
-                        Procesar Transcripción
+                        Process Transcript
                     </button>
                 </div>
             </section>
@@ -441,19 +447,18 @@
             <section id="processing-section" class="section hidden">
                 <div class="loading-state">
                     <div class="spinner-large"></div>
-                    <h3>Procesando Contenido del Video</h3>
-                    <p id="processing-status">Analizando transcripción...</p>
+                    <h3>Processing Video Content</h3>
+                    <p id="processing-status">Analyzing transcript...</p>
                 </div>
             </section>
 
             <!-- Step 3: Summary Section -->
             <section id="summary-section" class="section hidden">
-                <h2>Resumen del Video</h2>
-                <div class="video-info" id="video-info"></div>
+                <h2>Video Summary</h2>
                 <div class="summary-content" id="summary-content"></div>
                 <div class="action-buttons">
-                    <button id="start-quiz-btn" class="btn btn-primary">Comenzar Cuestionario</button>
-                    <button id="view-transcript-btn" class="btn btn-secondary">Ver Transcripción Completa</button>
+                    <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
+                    <button id="view-transcript-btn" class="btn btn-secondary">View Full Transcript</button>
                 </div>
             </section>
 
@@ -461,7 +466,7 @@
             <div id="transcript-modal" class="modal hidden">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>Transcripción Completa</h3>
+                        <h3>Full Transcript</h3>
                         <button class="close-btn" id="close-transcript-modal">&times;</button>
                     </div>
                     <div class="modal-body" id="transcript-modal-body"></div>
@@ -471,9 +476,9 @@
             <!-- Step 4: Quiz Section -->
             <section id="quiz-section" class="section hidden">
                 <div class="quiz-header">
-                    <h2>Cuestionario de Conocimiento</h2>
+                    <h2>Knowledge Quiz</h2>
                     <div class="quiz-progress">
-                        <span id="quiz-progress-text">Pregunta 1 de 5</span>
+                        <span id="quiz-progress-text">Question 1 of 5</span>
                     </div>
                 </div>
                 <div id="quiz-container"></div>
@@ -482,33 +487,45 @@
             <!-- Step 5: Results Section -->
             <section id="results-section" class="section hidden">
                 <div class="results-header">
-                    <h2>Resultados del Cuestionario</h2>
+                    <h2>Quiz Results</h2>
                     <div class="score-display">
                         <div class="score-circle">
                             <span id="score-percentage">0%</span>
                         </div>
-                        <p id="score-message">¡Excelente trabajo!</p>
+                        <p id="score-message">Great job!</p>
                     </div>
                 </div>
+                
+                <!-- YouTube Video Section -->
+                <div id="youtube-video-section" class="youtube-video-section hidden">
+                    <h3>📺 Video with Timestamps</h3>
+                    <div id="youtube-video-container"></div>
+                    <div id="timestamp-navigation" class="timestamp-navigation"></div>
+                </div>
+                
                 <div id="results-details"></div>
                 <div class="action-buttons">
-                    <button id="retake-quiz-btn" class="btn btn-primary">Repetir Cuestionario</button>
-                    <button id="new-video-btn" class="btn btn-secondary">Analizar Nuevo Video</button>
+                    <button id="retake-quiz-btn" class="btn btn-primary">Retake Quiz</button>
+                    <button id="new-video-btn" class="btn btn-secondary">Analyze New Video</button>
                 </div>
                 <div class="history-section">
-                    <h3>Intentos Anteriores</h3>
+                    <h3>Previous Attempts</h3>
                     <div id="attempt-history"></div>
                 </div>
             </section>
         </main>
 
         <footer class="footer">
-            <p>Construido con ❤️ para un mejor aprendizaje</p>
+            <p>Built with ❤️ for better learning</p>
         </footer>
     </div>
 
     <script src="../youtube-embed.js"></script>
-    <script src="../app.js"></script>
+    <script type="module" src="../app.js"></script>
+    <script nomodule>
+        alert('Your browser does not support ES6 modules. Please use a modern browser like Chrome, Firefox, or Safari.');
+    </script>
     <script src="../language-dropdown.js"></script>
 </body>
 </html>
+
