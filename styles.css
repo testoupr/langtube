@@ -6,8 +6,8 @@
 }
 
 :root {
-    --primary-color: #4f46e5;
-    --primary-hover: #4338ca;
+    --primary-color: #003459;
+    --primary-hover: #007EA7;
     --secondary-color: #64748b;
     --success-color: #10b981;
     --error-color: #ef4444;
@@ -31,7 +31,7 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #003459 0%, #007EA7 100%);
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
@@ -116,8 +116,7 @@ body {
 }
 
 input[type="text"],
-textarea,
-select {
+textarea {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 2px solid var(--border-color);
@@ -125,36 +124,18 @@ select {
     font-size: 1rem;
     transition: all 0.2s;
     font-family: inherit;
-    background-color: var(--surface-color);
 }
 
 input[type="text"]:focus,
-textarea:focus,
-select:focus {
+textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    padding-right: 2.5rem;
-}
-
 textarea {
     resize: vertical;
     min-height: 150px;
-}
-
-.help-text {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
 }
 
 /* Buttons */
@@ -198,6 +179,65 @@ textarea {
 .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* Language Selection */
+.language-selection {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: var(--radius-md);
+    border: 2px solid #bae6fd;
+}
+
+.language-group-single {
+    margin-bottom: 0;
+}
+
+.language-group-single label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.label-main {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.label-hint {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.language-selection select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: white;
+    font-size: 1rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.language-selection select:hover {
+    border-color: var(--primary-color);
+}
+
+.language-selection select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Mobile responsive language selection */
+@media (max-width: 640px) {
+    .language-selection {
+        padding: 1rem;
+    }
 }
 
 /* Divider */
@@ -692,4 +732,39 @@ textarea {
         font-size: 1.125rem;
     }
 }
+.marquee-container {
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border-top: 3px solid var(--border-color);
+    border-bottom: 3px solid var(--border-color);
+    background: var(--surface-color);
+    padding: 0.75rem 1rem; /* smaller height to avoid covering content */
+    margin-bottom: 2rem;   /* spacing below marquee */
+    border-radius: var(--radius-lg);
+    z-index: 1;             /* ensure content below can appear */
+    position: relative;
+}
 
+.marquee {
+    display: flex;
+    width: max-content;
+    font-size: 1.5rem;       /* smaller text so it doesn’t dominate */
+    font-weight: 600;
+    color: var(--text-primary);
+    animation: marquee-scroll 25s linear infinite;
+}
+
+.marquee span {
+    display: inline-block;
+    margin-right: 3rem; /* spacing between repeats */
+}
+
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}

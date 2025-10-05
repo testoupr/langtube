@@ -3,41 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClipLingo - Learn from YouTube Videos</title>
+    <title>TITLETITLETITLE</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎬</text></svg>">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1 class="logo">🎬 ClipLingo</h1>
-            <p class="tagline">Transform YouTube videos into interactive learning experiences</p>
-        </header>
+    <header class="header">
+        <div class="logo">LangTube</div>
+        <div class="tagline">Learn languages from YouTube videos</div>
+    </header>
 
-        <main class="main">
-            <!-- Step 1: Input Section -->
-            <section id="input-section" class="section active">
-                <h2>Get Started</h2>
-                <div class="input-group">
-                    <label for="youtube-url">YouTube URL</label>
-                    <div class="url-input-wrapper">
-                        <input 
-                            type="text" 
-                            id="youtube-url" 
-                            placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
-                            aria-label="YouTube video URL"
-                        />
-                        <button id="fetch-transcript-btn" class="btn btn-primary">
-                            <span class="btn-text">Fetch Transcript</span>
-                            <span class="spinner hidden"></span>
-                        </button>
-                    </div>
-                    <div class="error-message hidden" id="url-error"></div>
+    <div class="marquee-container">
+        <div class="marquee">
+          <span>
+            English • 中文 • Español • Français • العربية • Português • Русский • Italiano • Deutsch • 日本語 • 한국어 • Türkçe • Nederlands • Polski • हिन्दी •
+          </span>
+          <span>
+            English • 中文 • Español • Français • العربية • Português • Русский • Italiano • Deutsch • 日本語 • 한국어 • Türkçe • Nederlands • Polski • हिन्दी •
+          </span>
+        </div>
+      </div>      
+
+    <main class="main">
+        <!-- Input Section -->
+        <section id="input-section" class="section active">
+            <h2>Get Started</h2>
+            <div class="input-group">
+                <label for="youtube-url">YouTube URL</label>
+                <div class="url-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="youtube-url" 
+                        placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                        aria-label="YouTube video URL"
+                    />
+                    <button id="fetch-transcript-btn" class="btn btn-primary">
+                        <span class="btn-text">Fetch Transcript</span>
+                        <span class="spinner hidden"></span>
+                    </button>
                 </div>
+                <div class="error-message hidden" id="url-error"></div>
+            </div>
 
-                <div class="input-group">
-                    <label for="target-language">Translation Language (Optional)</label>
-                    <select id="target-language" aria-label="Target language for translation">
-                        <option value="">Original Language (No Translation)</option>
+            <!-- Language Selection -->
+            <div class="language-selection">
+                <div class="input-group language-group-single">
+                    <label for="target-language">
+                        <span class="label-main">Quiz & Summary Language</span>
+                        <span class="label-hint">Choose the language for questions and summaries</span>
+                    </label>
+                    <select id="target-language" aria-label="Select quiz language">
                         <option value="en">English</option>
                         <option value="es">Spanish (Español)</option>
                         <option value="fr">French (Français)</option>
@@ -53,102 +68,28 @@
                         <option value="nl">Dutch (Nederlands)</option>
                         <option value="pl">Polish (Polski)</option>
                         <option value="tr">Turkish (Türkçe)</option>
-                        <option value="vi">Vietnamese (Tiếng Việt)</option>
-                        <option value="th">Thai (ไทย)</option>
-                        <option value="id">Indonesian (Bahasa Indonesia)</option>
                     </select>
-                    <small class="help-text">Select a language to translate the transcript automatically</small>
-                </div>
-
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-
-                <div class="input-group">
-                    <label for="manual-transcript">Paste Transcript Manually</label>
-                    <textarea 
-                        id="manual-transcript" 
-                        rows="8" 
-                        placeholder="Paste your YouTube transcript here (timestamps will be cleaned automatically)..."
-                        aria-label="Manual transcript input"
-                    ></textarea>
-                    <button id="process-manual-btn" class="btn btn-secondary">
-                        Process Transcript
-                    </button>
-                </div>
-            </section>
-
-            <!-- Step 2: Processing/Loading Section -->
-            <section id="processing-section" class="section hidden">
-                <div class="loading-state">
-                    <div class="spinner-large"></div>
-                    <h3>Processing Video Content</h3>
-                    <p id="processing-status">Analyzing transcript...</p>
-                </div>
-            </section>
-
-            <!-- Step 3: Summary Section -->
-            <section id="summary-section" class="section hidden">
-                <h2>Video Summary</h2>
-                <div class="video-info" id="video-info"></div>
-                <div class="summary-content" id="summary-content"></div>
-                <div class="action-buttons">
-                    <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
-                    <button id="view-transcript-btn" class="btn btn-secondary">View Full Transcript</button>
-                </div>
-            </section>
-
-            <!-- Transcript Modal -->
-            <div id="transcript-modal" class="modal hidden">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Full Transcript</h3>
-                        <button class="close-btn" id="close-transcript-modal">&times;</button>
-                    </div>
-                    <div class="modal-body" id="transcript-modal-body"></div>
                 </div>
             </div>
 
-            <!-- Step 4: Quiz Section -->
-            <section id="quiz-section" class="section hidden">
-                <div class="quiz-header">
-                    <h2>Knowledge Quiz</h2>
-                    <div class="quiz-progress">
-                        <span id="quiz-progress-text">Question 1 of 5</span>
-                    </div>
-                </div>
-                <div id="quiz-container"></div>
-            </section>
+            <div class="divider"><span>OR</span></div>
 
-            <!-- Step 5: Results Section -->
-            <section id="results-section" class="section hidden">
-                <div class="results-header">
-                    <h2>Quiz Results</h2>
-                    <div class="score-display">
-                        <div class="score-circle">
-                            <span id="score-percentage">0%</span>
-                        </div>
-                        <p id="score-message">Great job!</p>
-                    </div>
-                </div>
-                <div id="results-details"></div>
-                <div class="action-buttons">
-                    <button id="retake-quiz-btn" class="btn btn-primary">Retake Quiz</button>
-                    <button id="new-video-btn" class="btn btn-secondary">Analyze New Video</button>
-                </div>
-                <div class="history-section">
-                    <h3>Previous Attempts</h3>
-                    <div id="attempt-history"></div>
-                </div>
-            </section>
-        </main>
+            <div class="input-group">
+                <label for="manual-transcript">Paste Transcript Manually</label>
+                <textarea 
+                    id="manual-transcript" 
+                    rows="8" 
+                    placeholder="Paste your YouTube transcript here (timestamps will be cleaned automatically)..."
+                    aria-label="Manual transcript input"
+                ></textarea>
+                <button id="process-manual-btn" class="btn btn-secondary">
+                    Process Transcript
+                </button>
+            </div>
+        </section>
 
-        <footer class="footer">
-            <p>Built with ❤️ for better learning</p>
-        </footer>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
-
+        <!-- Processing/Loading Section -->
+        <section id="processing-section" class="section hidden">
+            <div class="loading-state">
+                <div class="spinner-large"></div>
+                <h3>Processing Video
