@@ -361,6 +361,39 @@ textarea {
     padding-left: 0.5rem;
 }
 
+/* Vocabulary Section */
+.vocabulary-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.vocabulary-item {
+    background: white;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.vocab-word {
+    font-size: 1.125rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.vocab-definition {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.vocab-example {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
 /* Action Buttons */
 .action-buttons {
     display: flex;

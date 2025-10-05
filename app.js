@@ -2,6 +2,9 @@
 // ClipLingo - YouTube Learning App
 // ============================================================================
 
+// Import Supadata SDK from CDN
+import { Supadata } from "https://cdn.skypack.dev/@supadata/js";
+
 // Global State
 const state = {
     videoId: null,
@@ -9,11 +12,14 @@ const state = {
     rawTranscript: '',
     cleanTranscript: '',
     summary: '',
+    vocabulary: [],
     quiz: [],
     currentQuestionIndex: 0,
     answers: [],
     score: 0,
     targetLanguage: 'en',
+    nativeLanguage: 'en',
+    difficultyLevel: 'intermediate',
 };
 
 // API Configuration
@@ -27,8 +33,13 @@ const API_CONFIG = {
     
 
     // Supadata API for YouTube transcripts
-    supadataKey: 'sd_a7ec43f23cd8652aeee773706121bb25',
+    supadataKey: 'sd_54bdba6597b2544d5aba402554e7220b',
 };
+
+// Initialize Supadata SDK
+const supadata = new Supadata({
+    apiKey: API_CONFIG.supadataKey,
+});
 
 // ============================================================================
 // Utility Functions
@@ -136,33 +147,27 @@ function hideError(elementId) {
  */
 async function callGemini(transcript) {
     const targetLang = state.targetLanguage || 'en';
+    const nativeLang = state.nativeLanguage || 'en';
+    const difficulty = state.difficultyLevel || 'intermediate';
     
-    // Simple language instruction - Gemini understands language codes directly
-    const languageInstruction = `\n\nIMPORTANT: Generate ALL content (summary points, questions, options, and explanations) in ${targetLang}. The transcript may be in a different language, but your output must be in ${targetLang}.`;
-    
-    const prompt = `You are an educational content analyzer. Analyze the following video transcript and provide:
+    const prompt = `You are a language learning assistant. Analyze this transcript and create educational content for ${difficulty} level learners learning ${targetLang} using ${nativeLang}.
 
-    1. A summary with 5 key points (as an array of strings)
-    2. A quiz with exactly 5 multiple choice questions (each with 4 options)
-    
-    Return ONLY valid JSON in this exact format:
-    {
-      "summary": ["point 1", "point 2", "point 3", "point 4", "point 5"],
-      "quiz": [
-        {
-          "type": "multiple-choice",
-          "question": "question text",
-          "options": ["option A", "option B", "option C", "option D"],
-          "correctAnswer": 0,
-          "explanation": "why this is correct"
-        }
-      ]
-    }
-    
-    Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
-    
-    Transcript:
-    ${transcript}`;
+Return JSON:
+{
+  "summary": ["5 key points, ${difficulty}-level bilingual support"],
+  "vocabulary": [{"word": "word/phrase in ${targetLang}", "definition": "definition in ${nativeLang}", "example": "example sentence in ${targetLang}"}],
+  "quiz": [{"question": "question in ${nativeLang}", "options": ["A","B","C","D"], "correctAnswer": 0, "explanation": "explanation"}]
+}
+
+Requirements:
+- Summary: Use a mix of ${targetLang} and ${nativeLang} fitting for ${difficulty} learners
+- Quiz questions test ${targetLang} knowledge but are written in ${nativeLang}
+- Focus on vocabulary, grammar, and comprehension
+- All 5 questions multiple-choice with 4 options
+- correctAnswer is index 0-3
+- Limit vocabulary to 5 words
+
+Transcript: ${transcript}`;
 
     // Use v1beta endpoint for latest models
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${API_CONFIG.geminiModel}:generateContent?key=${API_CONFIG.geminiKey}`;
@@ -277,72 +282,41 @@ async function fetchTranscript(videoId) {
         // Construct YouTube URL from video ID
         const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
         
-        // Call Supadata API - uses GET method with query parameters
-        // API auto-detects available captions/language
-        const apiUrl = `https://api.supadata.ai/v1/youtube/transcript?url=${encodeURIComponent(youtubeUrl)}`;
+        console.log('Fetching transcript from:', youtubeUrl);
+        console.log('Target language:', state.targetLanguage);
         
-        console.log('Fetching transcript from:', apiUrl);
-        
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'x-api-key': API_CONFIG.supadataKey,
-                'Accept': 'application/json'
-            }
+        // Use Supadata SDK with language selection
+        const response = await supadata.transcript({
+            url: youtubeUrl,
+            lang: state.targetLanguage, // Use target language for transcript
+            text: true, // Return plain text instead of timestamped chunks
+            mode: "auto", // Auto-detect or generate captions
         });
         
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            console.error('Supadata API error response:', errorData);
-            
-            // Handle specific error cases
-            if (response.status === 404) {
-                throw new Error('Video not found or no captions available. Please try a different video or use manual paste.');
-            } else if (response.status === 401) {
-                throw new Error('API authentication failed. Please check the API key.');
-            } else if (response.status === 429) {
-                throw new Error('API rate limit exceeded. Please try again later.');
-            }
-            
-            throw new Error(errorData.message || `Failed to fetch transcript (status ${response.status})`);
-        }
-        
-        const data = await response.json();
-        console.log('Supadata response:', data);
+        console.log('Supadata response:', response);
         
         // Extract transcript text from response
-        // According to Supadata API: content can be a string or an array of segments
         let transcript = '';
         
-        if (data.content) {
-            if (typeof data.content === 'string') {
-                // Content is already a string
-                transcript = data.content;
-            } else if (Array.isArray(data.content)) {
-                // Content is an array of segments - join all text
-                transcript = data.content
-                    .map(segment => {
-                        // Each segment might have 'text' or 'content' field
-                        return segment.text || segment.content || segment;
-                    })
-                    .filter(text => typeof text === 'string' && text.trim().length > 0)
-                    .join(' ');
-            }
-        } else if (data.text) {
-            // Alternative field name
-            transcript = data.text;
-        } else if (data.transcript) {
-            // Another alternative
-            transcript = typeof data.transcript === 'string' 
-                ? data.transcript 
-                : JSON.stringify(data.transcript);
+        if (response.text) {
+            transcript = response.text;
+        } else if (response.content) {
+            transcript = response.content;
+        } else if (response.transcript) {
+            transcript = response.transcript;
+        } else if (Array.isArray(response)) {
+            // Handle array of segments
+            transcript = response
+                .map(segment => segment.text || segment.content || segment)
+                .filter(text => typeof text === 'string' && text.trim().length > 0)
+                .join(' ');
         } else {
-            console.error('Unexpected response format:', data);
+            console.error('Unexpected response format:', response);
             throw new Error('Unable to extract transcript from API response. Please try manual paste.');
         }
         
         if (!transcript || typeof transcript !== 'string' || transcript.trim().length < 50) {
-            throw new Error('Transcript is too short or empty. The video may not have captions available.');
+            throw new Error(`No transcript available in ${state.targetLanguage}. The video may not have captions in this language. Please try manual paste.`);
         }
         
         console.log('Successfully fetched transcript, length:', transcript.length);
@@ -484,6 +458,10 @@ async function processTranscript() {
             throw new Error('Invalid AI response: missing summary');
         }
         
+        if (!aiResult.vocabulary || !Array.isArray(aiResult.vocabulary)) {
+            throw new Error('Invalid AI response: missing vocabulary');
+        }
+        
         if (!aiResult.quiz || !Array.isArray(aiResult.quiz) || aiResult.quiz.length < 3) {
             throw new Error('Invalid AI response: insufficient quiz questions');
         }
@@ -494,6 +472,9 @@ async function processTranscript() {
         
         // Store summary array directly (AI already provides array)
         state.summary = aiResult.summary;
+        
+        // Store vocabulary
+        state.vocabulary = aiResult.vocabulary;
         
         // Add IDs to quiz questions for tracking
         state.quiz = aiResult.quiz.map((q, idx) => ({
@@ -570,8 +551,20 @@ function displaySummary() {
         <ul>
             ${summaryPoints.map(point => `<li>${point}</li>`).join('')}
         </ul>
+        
+        <h3 style="margin-top: 2rem;">Key Vocabulary</h3>
+        <div class="vocabulary-list">
+            ${state.vocabulary.map(vocab => `
+                <div class="vocabulary-item">
+                    <div class="vocab-word"><strong>${vocab.word}</strong></div>
+                    <div class="vocab-definition">${vocab.definition}</div>
+                    <div class="vocab-example"><em>Example: ${vocab.example}</em></div>
+                </div>
+            `).join('')}
+        </div>
+        
         <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
-            <em>✨ Generated by AI</em>
+            <em>✨ Generated by AI for language learning</em>
         </p>
     `;
 }
@@ -846,11 +839,12 @@ function handleNewVideo() {
     state.rawTranscript = '';
     state.cleanTranscript = '';
     state.summary = '';
+    state.vocabulary = [];
     state.quiz = [];
     state.currentQuestionIndex = 0;
     state.answers = [];
     state.score = 0;
-    // Keep language selections - don't reset them
+    // Keep target language, native language, and fluency level selections - don't reset them
     
     // Clear inputs
     document.getElementById('youtube-url').value = '';
@@ -868,13 +862,33 @@ function handleNewVideo() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded - attaching event listeners...');
     
-    // Language selection for quiz/summary output
+    // Target language selection (language to learn)
     const targetLanguageSelect = document.getElementById('target-language');
     
     if (targetLanguageSelect) {
         targetLanguageSelect.addEventListener('change', (e) => {
             state.targetLanguage = e.target.value;
-            console.log('Quiz language changed to:', state.targetLanguage);
+            console.log('Target learning language changed to:', state.targetLanguage);
+        });
+    }
+    
+    // Native language selection (for explanations and quiz)
+    const nativeLanguageSelect = document.getElementById('native-language');
+    
+    if (nativeLanguageSelect) {
+        nativeLanguageSelect.addEventListener('change', (e) => {
+            state.nativeLanguage = e.target.value;
+            console.log('Native language changed to:', state.nativeLanguage);
+        });
+    }
+    
+    // Difficulty level selection (fluency in target language)
+    const difficultyLevelSelect = document.getElementById('difficulty-level');
+    
+    if (difficultyLevelSelect) {
+        difficultyLevelSelect.addEventListener('change', (e) => {
+            state.difficultyLevel = e.target.value;
+            console.log('Fluency level changed to:', state.difficultyLevel);
         });
     }
     

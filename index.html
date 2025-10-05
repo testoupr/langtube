@@ -39,8 +39,8 @@
                 <div class="language-selection">
                     <div class="input-group language-group-single">
                         <label for="target-language">
-                            <span class="label-main">Quiz & Summary Language</span>
-                            <span class="label-hint">Choose the language for questions and summaries</span>
+                            <span class="label-main">Language I Want to Learn</span>
+                            <span class="label-hint">Choose the language you want to practice and improve</span>
                         </label>
                         <select id="target-language" aria-label="Select quiz language">
                             <option value="en">English</option>
@@ -81,6 +81,65 @@
                             <option value="tr">Turkish (Türkçe)</option>
                             <option value="uk">Ukrainian (Українська)</option>
                             <option value="vi">Vietnamese (Tiếng Việt)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group language-group-single">
+                        <label for="native-language">
+                            <span class="label-main">My Native Language</span>
+                            <span class="label-hint">Choose your native language for explanations and quiz questions</span>
+                        </label>
+                        <select id="native-language" aria-label="Select native language">
+                            <option value="en">English</option>
+                            <option value="ar">Arabic (العربية)</option>
+                            <option value="bn">Bengali (বাংলা)</option>
+                            <option value="bg">Bulgarian (Български)</option>
+                            <option value="zh">Chinese (中文)</option>
+                            <option value="hr">Croatian (Hrvatski)</option>
+                            <option value="cs">Czech (Čeština)</option>
+                            <option value="da">Danish (Dansk)</option>
+                            <option value="nl">Dutch (Nederlands)</option>
+                            <option value="et">Estonian (Eesti)</option>
+                            <option value="fi">Finnish (Suomi)</option>
+                            <option value="fr">French (Français)</option>
+                            <option value="de">German (Deutsch)</option>
+                            <option value="el">Greek (Ελληνικά)</option>
+                            <option value="he">Hebrew (עברית)</option>
+                            <option value="hi">Hindi (हिन्दी)</option>
+                            <option value="hu">Hungarian (Magyar)</option>
+                            <option value="id">Indonesian (Bahasa Indonesia)</option>
+                            <option value="it">Italian (Italiano)</option>
+                            <option value="ja">Japanese (日本語)</option>
+                            <option value="ko">Korean (한국어)</option>
+                            <option value="lv">Latvian (Latviešu)</option>
+                            <option value="lt">Lithuanian (Lietuvių)</option>
+                            <option value="no">Norwegian (Norsk)</option>
+                            <option value="pl">Polish (Polski)</option>
+                            <option value="pt">Portuguese (Português)</option>
+                            <option value="ro">Romanian (Română)</option>
+                            <option value="ru">Russian (Русский)</option>
+                            <option value="sr">Serbian (Српски)</option>
+                            <option value="sk">Slovak (Slovenčina)</option>
+                            <option value="sl">Slovenian (Slovenščina)</option>
+                            <option value="es">Spanish (Español)</option>
+                            <option value="sw">Swahili (Kiswahili)</option>
+                            <option value="sv">Swedish (Svenska)</option>
+                            <option value="th">Thai (ไทย)</option>
+                            <option value="tr">Turkish (Türkçe)</option>
+                            <option value="uk">Ukrainian (Українська)</option>
+                            <option value="vi">Vietnamese (Tiếng Việt)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group language-group-single">
+                        <label for="difficulty-level">
+                            <span class="label-main">My Fluency Level</span>
+                            <span class="label-hint">How fluent are you in the language you want to learn?</span>
+                        </label>
+                        <select id="difficulty-level" aria-label="Select difficulty level">
+                            <option value="beginner">Beginner - Just starting to learn</option>
+                            <option value="intermediate" selected>Intermediate - Can have basic conversations</option>
+                            <option value="advanced">Advanced - Fluent but want to improve</option>
                         </select>
                     </div>
                 </div>
@@ -173,7 +232,7 @@
         </footer>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
 
