@@ -156,25 +156,51 @@ async function callGemini(transcript) {
     const nativeLang = state.nativeLanguage || 'en';
     const difficulty = state.difficultyLevel || 'intermediate';
     
-    const prompt = `You are a language learning assistant. Analyze this transcript and create educational content for ${difficulty} level learners learning ${targetLang} using ${nativeLang}, using a mix of ${targetLang} and ${nativeLang} fitting for ${difficulty} learners
+    // Console logging for debugging
+    console.log('=== AI REQUEST DEBUG INFO ===');
+    console.log('Target Language:', targetLang);
+    console.log('Native Language:', nativeLang);
+    console.log('Difficulty Level:', difficulty);
+    console.log('Transcript Length:', transcript.length);
+    console.log('Transcript Preview (first 200 chars):', transcript.substring(0, 200));
+    console.log('Transcript Preview (last 200 chars):', transcript.substring(transcript.length - 200));
+    console.log('================================');
+    
+    const prompt = `Create progressive language learning content from this transcript for ${difficulty} level learners.
+
+SYSTEM INSTRUCTIONS: We will use ISO 639-1 two-letter codes. For the purpose of these rules, we will use two functional labels:
+- IL (Instruction Language): The language for explanations, summaries, and quiz questions.
+- TL (Target Language): The language that contains the specific vocabulary or phrases being learned.
+
+CURRENT SCENARIO:
+- IL = ${nativeLang}
+- TL = ${targetLang}
+- When IL and TL are the same, IL = standard version of the language, and TL = advanced version of the language
 
 Return JSON:
 {
-  "summary": ["5 key points, ${difficulty}-level bilingual support"],
-  "vocabulary": [{"word": "word/phrase in ${targetLang}", "definition": "definition in ${nativeLang}", "example": "example sentence in ${targetLang}"}],
-  "quiz": [{"question": "question in ${nativeLang}", "options": ["A","B","C","D"], "correctAnswer": 0, "explanation": "explanation"}]
+  "summary": ["5 key points with progressive TL integration"],
+  "vocabulary": [{"word": "word in TL", "definition": "definition in IL", "example": "example mixing both languages"}],
+  "quiz": [{"question": "question mixing IL and TL", "options": ["A","B","C","D"], "correctAnswer": 0, "explanation": "explanation in IL"}]
 }
+Focus on:
+ - Vocabulary: word meanings, synonyms, usage in context
+ - Grammar: sentence structure, verb tenses, prepositions
+ - Comprehension: main ideas, details, inference
 
-Requirements:
-- Summary: 5 separate bullet points, each being a sentence using a mix of ${targetLang} and ${nativeLang} fitting for ${difficulty} learners, don't nuber them
-- Quiz questions test ${targetLang} knowledge but are written mostly in ${nativeLang}
-- Focus on vocabulary, grammar, and comprehension
-- have 5 questions and 5 vocabulary
-- This is for a html site, so any formatting should be done in html tags
-- Make sure you're not mixing up languages eg. simplified and traditional chinese
-- If you can, add aid eg. pinyin for chinese words
+Difficulty-based rules:
+- BEGINNER: Summary mostly IL with 1-2 TL words (with IL translations). Quiz: 5-6 questions in IL with 1-2 TL words. 3-4 vocabulary words.
+- INTERMEDIATE: Summary balanced IL/TL mix. Quiz: 6-7 questions mixing both languages. 4-5 vocabulary words.
+- ADVANCED: Summary mostly TL with IL support. Quiz: 7-8 questions mostly TL with IL hints. 5-6 vocabulary words.
+
+Format: Use HTML tags. Add pronunciation aids for TL
 
 Transcript: ${transcript}`;
+
+    // Log the complete prompt being sent to AI
+    console.log('=== COMPLETE PROMPT SENT TO AI ===');
+    console.log(prompt);
+    console.log('=== END PROMPT ===');
 
     // Use Google GenAI SDK
     const response = await ai.models.generateContent({
@@ -236,7 +262,7 @@ Transcript: ${transcript}`;
         const parsed = JSON.parse(jsonString);
         
         // Validate the response has all required data
-        if (!parsed.summary || parsed.summary.length < 5) {
+        if (!parsed.summary || parsed.summary.length < 3) {
             throw new Error('Incomplete summary in AI response');
         }
         if (!parsed.quiz || parsed.quiz.length < 5) {
@@ -269,8 +295,11 @@ async function fetchTranscript(videoId) {
         // Construct YouTube URL from video ID
         const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
         
+        console.log('=== TRANSCRIPT FETCHING DEBUG ===');
         console.log('Fetching transcript from:', youtubeUrl);
-        console.log('Target language:', state.targetLanguage);
+        console.log('Requesting transcript in language:', state.targetLanguage);
+        console.log('Native language setting:', state.nativeLanguage);
+        console.log('==================================');
         
         // Use Supadata SDK with language selection
         const response = await supadata.transcript({
