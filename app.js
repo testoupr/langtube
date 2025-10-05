@@ -13,8 +13,7 @@ const state = {
     currentQuestionIndex: 0,
     answers: [],
     score: 0,
-    sourceLanguage: 'en',  // Language of the video
-    targetLanguage: 'en',  // Language for quiz/summary
+    targetLanguage: 'en',
 };
 
 // API Configuration
@@ -55,13 +54,6 @@ function extractVideoId(url) {
 }
 
 /**
- * Validate YouTube URL
- */
-function isValidYouTubeUrl(url) {
-    return extractVideoId(url) !== null;
-}
-
-/**
  * Clean transcript: remove timestamps, normalize whitespace, preserve international text
  */
 function cleanTranscript(rawText) {
@@ -98,266 +90,21 @@ function sentenceTokenize(text) {
 }
 
 /**
- * Calculate word frequency (case-insensitive, filters stop words)
- */
-function calculateWordFrequency(text) {
-    const stopWords = new Set([
-        'the', 'is', 'at', 'which', 'on', 'a', 'an', 'and', 'or', 'but',
-        'in', 'with', 'to', 'for', 'of', 'as', 'by', 'that', 'this',
-        'it', 'from', 'be', 'are', 'was', 'were', 'been', 'have', 'has',
-        'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should',
-        'may', 'might', 'can', 'i', 'you', 'he', 'she', 'we', 'they',
-    ]);
-
-    // Extract words (Unicode-aware for international text)
-    const words = text.toLowerCase().match(/\p{L}+/gu) || [];
-    const frequency = {};
-
-    words.forEach(word => {
-        if (word.length > 3 && !stopWords.has(word)) {
-            frequency[word] = (frequency[word] || 0) + 1;
-        }
-    });
-
-    return frequency;
-}
-
-/**
- * Extractive summarization using sentence scoring
- */
-function generateSummary(text, numSentences = 5) {
-    const sentences = sentenceTokenize(text);
-    
-    if (sentences.length <= numSentences) {
-        return sentences.join(' ');
-    }
-
-    const wordFreq = calculateWordFrequency(text);
-    
-    // Score each sentence based on word frequency
-    const sentenceScores = sentences.map(sentence => {
-        const words = sentence.toLowerCase().match(/\p{L}+/gu) || [];
-        const score = words.reduce((sum, word) => sum + (wordFreq[word] || 0), 0);
-        return { sentence, score: score / words.length };
-    });
-
-    // Sort by score and take top sentences
-    const topSentences = sentenceScores
-        .sort((a, b) => b.score - a.score)
-        .slice(0, numSentences)
-        .map(item => item.sentence);
-
-    // Reorder to maintain original sequence
-    const orderedSummary = sentences.filter(s => topSentences.includes(s));
-    
-    return orderedSummary.join(' ');
-}
-
-/**
- * Generate quiz questions from transcript and summary
- */
-function generateQuiz(transcript, summary) {
-    const questions = [];
-    const sentences = sentenceTokenize(transcript);
-    
-    if (sentences.length < 5) {
-        throw new Error('Transcript too short to generate quiz');
-    }
-
-    // Generate 3 multiple choice questions
-    const mcqSentences = selectRandomSentences(sentences, 3);
-    mcqSentences.forEach((sentence, idx) => {
-        const question = generateMCQ(sentence, transcript, idx);
-        if (question) {
-            questions.push(question);
-        }
-    });
-
-    // Generate 2 cloze (fill-in-the-blank) questions
-    const clozeSentences = selectRandomSentences(sentences, 2);
-    clozeSentences.forEach((sentence, idx) => {
-        const question = generateCloze(sentence, idx);
-        if (question) {
-            questions.push(question);
-        }
-    });
-
-    // Shuffle questions
-    return shuffleArray(questions);
-}
-
-/**
- * Select random unique sentences from array
- */
-function selectRandomSentences(sentences, count) {
-    const selected = [];
-    const used = new Set();
-    const maxAttempts = sentences.length * 2;
-    let attempts = 0;
-
-    while (selected.length < count && attempts < maxAttempts) {
-        const idx = Math.floor(Math.random() * sentences.length);
-        const sentence = sentences[idx];
-        
-        if (!used.has(idx) && sentence.split(/\s+/).length >= 6) {
-            selected.push(sentence);
-            used.add(idx);
-        }
-        attempts++;
-    }
-
-    return selected;
-}
-
-/**
- * Generate a multiple choice question from a sentence
- */
-function generateMCQ(sentence, context, questionIndex) {
-    // Extract key words (proper nouns, numbers, important words)
-    const words = sentence.match(/\p{L}+|\d+/gu) || [];
-    if (words.length < 5) return null;
-
-    // Find a good word to ask about (longer words, capitalized words, numbers)
-    const candidates = words.filter(w => 
-        w.length > 4 || /^\p{Lu}/u.test(w) || /\d/.test(w)
-    );
-    
-    if (candidates.length === 0) return null;
-
-    const targetWord = candidates[Math.floor(Math.random() * candidates.length)];
-    const questionText = `According to the video, which statement is true?`;
-
-    // Create correct answer from the sentence
-    const correctAnswer = sentence.trim();
-
-    // Generate plausible distractors by modifying the sentence
-    const distractors = generateDistractors(sentence, context, targetWord);
-
-    const options = shuffleArray([correctAnswer, ...distractors]);
-    const correctIndex = options.indexOf(correctAnswer);
-
-    return {
-        id: `mcq_${questionIndex}`,
-        type: 'multiple-choice',
-        question: questionText,
-        options: options,
-        correctAnswer: correctIndex,
-        explanation: `This is stated in the video.`,
-    };
-}
-
-/**
- * Generate distractor options for MCQ
- */
-function generateDistractors(correctSentence, context, targetWord) {
-    const distractors = [];
-    const words = correctSentence.split(/\s+/);
-    
-    // Distractor 1: Replace key word with plausible alternative
-    const distractor1Words = [...words];
-    const targetIdx = distractor1Words.findIndex(w => w.includes(targetWord));
-    if (targetIdx !== -1) {
-        const alternatives = ['different', 'another', 'alternative', 'other', 'various'];
-        distractor1Words[targetIdx] = alternatives[Math.floor(Math.random() * alternatives.length)];
-        distractors.push(distractor1Words.join(' '));
-    }
-
-    // Distractor 2: Negate or modify the statement
-    let distractor2 = correctSentence;
-    if (correctSentence.includes('is') && !correctSentence.includes('is not')) {
-        distractor2 = correctSentence.replace('is', 'is not');
-    } else if (correctSentence.includes('are') && !correctSentence.includes('are not')) {
-        distractor2 = correctSentence.replace('are', 'are not');
-    } else {
-        // Add "rarely" or "never" to modify meaning
-        distractor2 = correctSentence.replace(/\s+/, ' rarely ');
-    }
-    distractors.push(distractor2);
-
-    // Distractor 3: Use a different sentence from context
-    const contextSentences = sentenceTokenize(context);
-    const differentSentences = contextSentences.filter(s => 
-        s !== correctSentence && s.split(/\s+/).length > 5
-    );
-    if (differentSentences.length > 0) {
-        const randomSentence = differentSentences[
-            Math.floor(Math.random() * differentSentences.length)
-        ];
-        distractors.push(randomSentence);
-    }
-
-    return distractors.slice(0, 3);
-}
-
-/**
- * Generate a cloze (fill-in-blank) question from a sentence
- */
-function generateCloze(sentence, questionIndex) {
-    const words = sentence.split(/(\s+)/);
-    const contentWords = words.filter(w => 
-        w.trim().length > 3 && /\p{L}/u.test(w)
-    );
-
-    if (contentWords.length < 3) return null;
-
-    // Select a word to blank out (prefer middle words)
-    const targetWord = contentWords[Math.floor(contentWords.length / 2)];
-    const blankSentence = sentence.replace(
-        new RegExp(`\\b${escapeRegex(targetWord)}\\b`, 'i'),
-        '______'
-    );
-
-    return {
-        id: `cloze_${questionIndex}`,
-        type: 'cloze',
-        question: `Fill in the blank: ${blankSentence}`,
-        correctAnswer: targetWord.toLowerCase().replace(/[^a-z0-9\p{L}]/gui, ''),
-        explanation: `The correct word is "${targetWord}".`,
-        originalSentence: sentence,
-    };
-}
-
-/**
- * Escape special regex characters
- */
-function escapeRegex(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-/**
- * Shuffle array using Fisher-Yates algorithm
- */
-function shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-}
-
-/**
  * Show/hide sections
  */
 function showSection(sectionId) {
-    console.log('showSection called with:', sectionId);
     const allSections = document.querySelectorAll('.section');
-    console.log('Found sections:', allSections.length);
     
     allSections.forEach(section => {
         section.classList.remove('active');
         section.classList.add('hidden');
-        console.log('Removed active from:', section.id);
     });
     
     const targetSection = document.getElementById(sectionId);
-    console.log('Target section:', targetSection);
     
     if (targetSection) {
         targetSection.classList.remove('hidden');
         targetSection.classList.add('active');
-        console.log('Added active to:', sectionId);
-        console.log('Section classes:', targetSection.classList.toString());
     } else {
         console.error('Section not found:', sectionId);
     }
@@ -385,83 +132,37 @@ function hideError(elementId) {
 // ============================================================================
 
 /**
- * Call AI API to process transcript and generate summary + quiz
- */
-async function processWithAI(cleanedTranscript) {
-    const provider = API_CONFIG.provider;
-    
-    console.log(`Processing with AI (${provider})...`);
-    
-    try {
-        if (provider === 'openai') {
-            return await callOpenAI(cleanedTranscript);
-        } else if (provider === 'claude') {
-            return await callClaude(cleanedTranscript);
-        } else if (provider === 'gemini') {
-            return await callGemini(cleanedTranscript);
-        } else if (provider === 'custom') {
-            return await callCustomAPI(cleanedTranscript);
-        } else {
-            throw new Error('Invalid API provider configuration');
-        }
-    } catch (error) {
-        console.error('AI processing error:', error);
-        throw error;
-    }
-}
-
-/**
  * Call Google Gemini API
  */
 async function callGemini(transcript) {
-    // Get language mapping for human-readable names
-    const languageNames = {
-        'en': 'English',
-        'es': 'Spanish',
-        'fr': 'French',
-        'de': 'German',
-        'it': 'Italian',
-        'pt': 'Portuguese',
-        'ru': 'Russian',
-        'ja': 'Japanese',
-        'ko': 'Korean',
-        'zh': 'Chinese',
-        'ar': 'Arabic',
-        'hi': 'Hindi',
-        'nl': 'Dutch',
-        'pl': 'Polish',
-        'tr': 'Turkish'
-    };
-    
     const targetLang = state.targetLanguage || 'en';
-    const targetLangName = languageNames[targetLang] || 'English';
     
-    // ALWAYS provide explicit language instruction, even for English
-    const languageInstruction = `\n\nIMPORTANT: You MUST generate ALL content (summary points, questions, options, and explanations) in ${targetLangName}. The transcript may be in a different language, but your output must be in ${targetLangName}. This is for language learning purposes.`;
+    // Simple language instruction - Gemini understands language codes directly
+    const languageInstruction = `\n\nIMPORTANT: Generate ALL content (summary points, questions, options, and explanations) in ${targetLang}. The transcript may be in a different language, but your output must be in ${targetLang}.`;
     
     const prompt = `You are an educational content analyzer. Analyze the following video transcript and provide:
 
-1. A summary with 5 key points (as an array of strings)
-2. A quiz with exactly 5 multiple choice questions (each with 4 options)
-
-Return ONLY valid JSON in this exact format:
-{
-  "summary": ["point 1", "point 2", "point 3", "point 4", "point 5"],
-  "quiz": [
+    1. A summary with 5 key points (as an array of strings)
+    2. A quiz with exactly 5 multiple choice questions (each with 4 options)
+    
+    Return ONLY valid JSON in this exact format:
     {
-      "type": "multiple-choice",
-      "question": "question text",
-      "options": ["option A", "option B", "option C", "option D"],
-      "correctAnswer": 0,
-      "explanation": "why this is correct"
+      "summary": ["point 1", "point 2", "point 3", "point 4", "point 5"],
+      "quiz": [
+        {
+          "type": "multiple-choice",
+          "question": "question text",
+          "options": ["option A", "option B", "option C", "option D"],
+          "correctAnswer": 0,
+          "explanation": "why this is correct"
+        }
+      ]
     }
-  ]
-}
-
-Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
-
-Transcript:
-${transcript}`;
+    
+    Make sure all 5 questions are multiple-choice format with 4 options each. The correctAnswer should be the index (0-3) of the correct option.${languageInstruction}
+    
+    Transcript:
+    ${transcript}`;
 
     // Use v1beta endpoint for latest models
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${API_CONFIG.geminiModel}:generateContent?key=${API_CONFIG.geminiKey}`;
@@ -494,6 +195,15 @@ ${transcript}`;
 
     const data = await response.json();
     console.log('Gemini full response:', data);
+    
+    // Log token usage
+    if (data.usageMetadata) {
+        console.log('Token usage:', {
+            promptTokens: data.usageMetadata.promptTokenCount,
+            responseTokens: data.usageMetadata.candidatesTokenCount,
+            totalTokens: data.usageMetadata.totalTokenCount,
+        });
+    }
     
     // Check if response has candidates
     if (!data.candidates || data.candidates.length === 0) {
@@ -553,27 +263,6 @@ ${transcript}`;
         
         throw new Error('Failed to parse AI response as JSON. The AI may have returned invalid JSON.');
     }
-}
-
-/**
- * Call custom API endpoint
- */
-async function callCustomAPI(transcript) {
-    const response = await fetch(API_CONFIG.customEndpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            transcript: transcript
-        })
-    });
-
-    if (!response.ok) {
-        throw new Error('Custom API request failed');
-    }
-
-    return await response.json();
 }
 
 // ============================================================================
@@ -775,7 +464,6 @@ async function processTranscript() {
         // Step 1: Clean transcript
         console.log('Step 1: Cleaning transcript...');
         updateProcessingStatus('Cleaning transcript...');
-        await sleep(300);
         
         state.cleanTranscript = cleanTranscript(state.rawTranscript);
         console.log('Cleaned transcript length:', state.cleanTranscript.length);
@@ -788,7 +476,7 @@ async function processTranscript() {
         console.log('Step 2: Sending to AI...');
         updateProcessingStatus('Analyzing content with AI...');
         
-        const aiResult = await processWithAI(state.cleanTranscript);
+        const aiResult = await callGemini(state.cleanTranscript);
         console.log('AI processing complete:', aiResult);
         
         // Validate AI response
@@ -803,10 +491,9 @@ async function processTranscript() {
         // Step 3: Store results
         console.log('Step 3: Processing AI results...');
         updateProcessingStatus('Preparing your learning materials...');
-        await sleep(300);
         
-        // Convert summary array to string for display
-        state.summary = aiResult.summary.join(' ');
+        // Store summary array directly (AI already provides array)
+        state.summary = aiResult.summary;
         
         // Add IDs to quiz questions for tracking
         state.quiz = aiResult.quiz.map((q, idx) => ({
@@ -814,11 +501,10 @@ async function processTranscript() {
             id: `ai_q_${idx}`
         }));
         
-        console.log('Summary:', state.summary.substring(0, 100) + '...');
+        console.log('Summary points:', state.summary.length);
         console.log('Quiz questions:', state.quiz.length);
         
         // Step 4: Display results
-        await sleep(300);
         console.log('Displaying summary...');
         displaySummary();
         showSection('summary-section');
@@ -840,13 +526,6 @@ async function processTranscript() {
 }
 
 /**
- * Helper function for delays
- */
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/**
  * Update processing status message
  */
 function updateProcessingStatus(message) {
@@ -857,12 +536,8 @@ function updateProcessingStatus(message) {
  * Display summary section
  */
 function displaySummary() {
-    console.log('displaySummary called');
     const videoInfoEl = document.getElementById('video-info');
     const summaryContentEl = document.getElementById('summary-content');
-    
-    console.log('Video info element:', videoInfoEl);
-    console.log('Summary content element:', summaryContentEl);
     
     // Display video info if available
     if (state.videoId) {
@@ -871,25 +546,25 @@ function displaySummary() {
             <p>Video ID: ${state.videoId}</p>
             ${state.videoUrl ? `<p><a href="${state.videoUrl}" target="_blank" rel="noopener">Watch on YouTube</a></p>` : ''}
         `;
-        console.log('Set video info HTML');
     } else {
         videoInfoEl.innerHTML = `
             <h3>AI-Generated Content Summary</h3>
         `;
-        console.log('Set content summary header');
     }
     
-    // Display summary - use sentence tokenization to split if needed
+    // Display summary - AI already returns array of points
     let summaryPoints;
-    if (state.summary.includes('. ')) {
-        // If it's a joined string, split it back
+    if (Array.isArray(state.summary)) {
+        // AI returned array of summary points
+        summaryPoints = state.summary;
+    } else if (state.summary.includes('. ')) {
+        // Fallback: split joined string
         summaryPoints = sentenceTokenize(state.summary);
     } else {
-        // If it's already formatted, just use it
+        // Single summary point
         summaryPoints = [state.summary];
     }
     
-    console.log('Summary points:', summaryPoints.length);
     summaryContentEl.innerHTML = `
         <h3>Key Points</h3>
         <ul>
@@ -899,7 +574,6 @@ function displaySummary() {
             <em>✨ Generated by AI</em>
         </p>
     `;
-    console.log('Set summary content HTML');
 }
 
 /**
@@ -1158,7 +832,7 @@ function displayHistory() {
  */
 function handleRetakeQuiz() {
     // Shuffle quiz questions
-    state.quiz = shuffleArray(state.quiz);
+    state.quiz = state.quiz.sort(() => Math.random() - 0.5);
     handleStartQuiz();
 }
 
