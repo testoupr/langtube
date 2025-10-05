@@ -4,6 +4,7 @@
 
 // Import Supadata SDK from CDN
 import { Supadata } from "https://cdn.skypack.dev/@supadata/js";
+import { GoogleGenAI } from "https://cdn.jsdelivr.net/npm/@google/genai@latest/+esm";
 
 // Global State
 const state = {
@@ -39,6 +40,11 @@ const API_CONFIG = {
 // Initialize Supadata SDK
 const supadata = new Supadata({
     apiKey: API_CONFIG.supadataKey,
+});
+
+// Initialize Google GenAI SDK
+const ai = new GoogleGenAI({
+    apiKey: API_CONFIG.geminiKey
 });
 
 // ============================================================================
@@ -150,7 +156,7 @@ async function callGemini(transcript) {
     const nativeLang = state.nativeLanguage || 'en';
     const difficulty = state.difficultyLevel || 'intermediate';
     
-    const prompt = `You are a language learning assistant. Analyze this transcript and create educational content for ${difficulty} level learners learning ${targetLang} using ${nativeLang}.
+    const prompt = `You are a language learning assistant. Analyze this transcript and create educational content for ${difficulty} level learners learning ${targetLang} using ${nativeLang}, using a mix of ${targetLang} and ${nativeLang} fitting for ${difficulty} learners
 
 Return JSON:
 {
@@ -160,63 +166,44 @@ Return JSON:
 }
 
 Requirements:
-- Summary: Use a mix of ${targetLang} and ${nativeLang} fitting for ${difficulty} learners
-- Quiz questions test ${targetLang} knowledge but are written in ${nativeLang}
+- Summary: 5 separate bullet points, each being a sentence using a mix of ${targetLang} and ${nativeLang} fitting for ${difficulty} learners, don't nuber them
+- Quiz questions test ${targetLang} knowledge but are written mostly in ${nativeLang}
 - Focus on vocabulary, grammar, and comprehension
-- All 5 questions multiple-choice with 4 options
-- correctAnswer is index 0-3
-- Limit vocabulary to 5 words
+- have 5 questions and 5 vocabulary
+- This is for a html site, so any formatting should be done in html tags
+- Make sure you're not mixing up languages eg. simplified and traditional chinese
+- If you can, add aid eg. pinyin for chinese words
 
 Transcript: ${transcript}`;
 
-    // Use v1beta endpoint for latest models
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${API_CONFIG.geminiModel}:generateContent?key=${API_CONFIG.geminiKey}`;
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            contents: [{
-                parts: [{
-                    text: prompt
-                }]
-            }],
-            generationConfig: {
-                temperature: 0.7,
-                topK: 40,
-                topP: 0.95,
-                maxOutputTokens: 16384,
+    // Use Google GenAI SDK
+    const response = await ai.models.generateContent({
+        model: API_CONFIG.geminiModel,
+        contents: prompt,
+        config: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 16384,
+            thinkingConfig: {
+                thinkingBudget: 0  // Disables thinking for faster responses
             }
-        })
+        }
     });
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Gemini API error:', errorData);
-        throw new Error(errorData.error?.message || `Gemini API request failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Gemini full response:', data);
+    console.log('Gemini full response:', response);
     
-    // Log token usage
-    if (data.usageMetadata) {
+    // Log token usage if available
+    if (response.usageMetadata) {
         console.log('Token usage:', {
-            promptTokens: data.usageMetadata.promptTokenCount,
-            responseTokens: data.usageMetadata.candidatesTokenCount,
-            totalTokens: data.usageMetadata.totalTokenCount,
+            promptTokens: response.usageMetadata.promptTokenCount,
+            responseTokens: response.usageMetadata.candidatesTokenCount,
+            totalTokens: response.usageMetadata.totalTokenCount,
         });
     }
     
-    // Check if response has candidates
-    if (!data.candidates || data.candidates.length === 0) {
-        throw new Error('Gemini returned no candidates. The content may have been blocked.');
-    }
-    
     // Extract text from Gemini response
-    let text = data.candidates[0].content.parts[0].text;
+    let text = response.text;
     console.log('Gemini raw response:', text);
     
     // Extract JSON from markdown code blocks if present
