@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LangTube - Impara guardando video</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎬</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">LangTube</h1>
+            <p class="tagline">Trasforma i video di YouTube in esperienze di apprendimento interattive</p>
+            
+                        <!-- Language Dropdown -->
+            <div class="language-dropdown">
+                <button class="language-dropdown-btn" id="language-dropdown-btn">
+                    <span class="current-language" id="current-language">🇮🇹 Italiano</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="language-dropdown-menu" id="language-dropdown-menu">
+                    <a href="index.html" class="language-option" data-lang="en">🇺🇸 English / Inglese</a>
+                    <a href="spanish.html" class="language-option" data-lang="es">🇪🇸 Español / Spagnolo</a>
+                    <a href="french.html" class="language-option" data-lang="fr">🇫🇷 Français / Francese</a>
+                    <a href="german.html" class="language-option" data-lang="de">🇩🇪 Deutsch / Tedesco</a>
+                    <a href="chinese.html" class="language-option" data-lang="zh">🇨🇳 中文 / Cinese</a>
+                    <a href="japanese.html" class="language-option" data-lang="ja">🇯🇵 日本語 / Giapponese</a>
+                    <a href="korean.html" class="language-option" data-lang="ko">🇰🇷 한국어 / Coreano</a>
+                    <a href="arabic.html" class="language-option" data-lang="ar">🇸🇦 العربية / Arabo</a>
+                    <a href="hindi.html" class="language-option" data-lang="hi">🇮🇳 हिन्दी / Hindi</a>
+                    <a href="portuguese.html" class="language-option" data-lang="pt">🇵🇹 Português / Portoghese</a>
+                    <a href="russian.html" class="language-option" data-lang="ru">🇷🇺 Русский / Russo</a>
+                    <a href="italian.html" class="language-option" data-lang="it">🇮🇹 Italiano</a>
+                    <a href="languages.html" class="language-option" data-lang="all">🌍 All Languages / Tutte le Lingue</a>
+                </div>
+            </div>
+        </header>
+        <!-- Language Marquee -->
+        <div class="language-marquee">
+            <div class="marquee-content">
+                <div class="language-item">
+                    <span class="language-flag">🇺🇸</span>
+                    <span class="language-name">English</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇪🇸</span>
+                    <span class="language-name">Español</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇫🇷</span>
+                    <span class="language-name">Français</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇩🇪</span>
+                    <span class="language-name">Deutsch</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇨🇳</span>
+                    <span class="language-name">中文</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇯🇵</span>
+                    <span class="language-name">日本語</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇰🇷</span>
+                    <span class="language-name">한국어</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇦</span>
+                    <span class="language-name">العربية</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇳</span>
+                    <span class="language-name">हिन्दी</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇵🇹</span>
+                    <span class="language-name">Português</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇷🇺</span>
+                    <span class="language-name">Русский</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇹</span>
+                    <span class="language-name">Italiano</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇳🇱</span>
+                    <span class="language-name">Nederlands</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇪</span>
+                    <span class="language-name">Svenska</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇳🇴</span>
+                    <span class="language-name">Norsk</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇩🇰</span>
+                    <span class="language-name">Dansk</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇫🇮</span>
+                    <span class="language-name">Suomi</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇵🇱</span>
+                    <span class="language-name">Polski</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇨🇿</span>
+                    <span class="language-name">Čeština</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇭🇺</span>
+                    <span class="language-name">Magyar</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇷🇴</span>
+                    <span class="language-name">Română</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇧🇬</span>
+                    <span class="language-name">Български</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇭🇷</span>
+                    <span class="language-name">Hrvatski</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇷🇸</span>
+                    <span class="language-name">Српски</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇰</span>
+                    <span class="language-name">Slovenčina</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇮</span>
+                    <span class="language-name">Slovenščina</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇱🇹</span>
+                    <span class="language-name">Lietuvių</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇱🇻</span>
+                    <span class="language-name">Latviešu</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇪🇪</span>
+                    <span class="language-name">Eesti</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇬🇷</span>
+                    <span class="language-name">Ελληνικά</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇱</span>
+                    <span class="language-name">עברית</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇹🇷</span>
+                    <span class="language-name">Türkçe</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇩</span>
+                    <span class="language-name">Bahasa Indonesia</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇹🇭</span>
+                    <span class="language-name">ไทย</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇻🇳</span>
+                    <span class="language-name">Tiếng Việt</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇰🇪</span>
+                    <span class="language-name">Kiswahili</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇧🇩</span>
+                    <span class="language-name">বাংলা</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇺🇦</span>
+                    <span class="language-name">Українська</span>
+                </div>
+                <!-- Duplicate content for seamless loop -->
+                <div class="language-item">
+                    <span class="language-flag">🇺🇸</span>
+                    <span class="language-name">English</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇪🇸</span>
+                    <span class="language-name">Español</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇫🇷</span>
+                    <span class="language-name">Français</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇩🇪</span>
+                    <span class="language-name">Deutsch</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇨🇳</span>
+                    <span class="language-name">中文</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇯🇵</span>
+                    <span class="language-name">日本語</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇰🇷</span>
+                    <span class="language-name">한국어</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇦</span>
+                    <span class="language-name">العربية</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇳</span>
+                    <span class="language-name">हिन्दी</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇵🇹</span>
+                    <span class="language-name">Português</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇷🇺</span>
+                    <span class="language-name">Русский</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇹</span>
+                    <span class="language-name">Italiano</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇳🇱</span>
+                    <span class="language-name">Nederlands</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇪</span>
+                    <span class="language-name">Svenska</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇳🇴</span>
+                    <span class="language-name">Norsk</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇩🇰</span>
+                    <span class="language-name">Dansk</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇫🇮</span>
+                    <span class="language-name">Suomi</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇵🇱</span>
+                    <span class="language-name">Polski</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇨🇿</span>
+                    <span class="language-name">Čeština</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇭🇺</span>
+                    <span class="language-name">Magyar</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇷🇴</span>
+                    <span class="language-name">Română</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇧🇬</span>
+                    <span class="language-name">Български</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇭🇷</span>
+                    <span class="language-name">Hrvatski</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇷🇸</span>
+                    <span class="language-name">Српски</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇰</span>
+                    <span class="language-name">Slovenčina</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇸🇮</span>
+                    <span class="language-name">Slovenščina</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇱🇹</span>
+                    <span class="language-name">Lietuvių</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇱🇻</span>
+                    <span class="language-name">Latviešu</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇪🇪</span>
+                    <span class="language-name">Eesti</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇬🇷</span>
+                    <span class="language-name">Ελληνικά</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇱</span>
+                    <span class="language-name">עברית</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇹🇷</span>
+                    <span class="language-name">Türkçe</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇮🇩</span>
+                    <span class="language-name">Bahasa Indonesia</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇹🇭</span>
+                    <span class="language-name">ไทย</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇻🇳</span>
+                    <span class="language-name">Tiếng Việt</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇰🇪</span>
+                    <span class="language-name">Kiswahili</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇧🇩</span>
+                    <span class="language-name">বাংলা</span>
+                </div>
+                <div class="language-item">
+                    <span class="language-flag">🇺🇦</span>
+                    <span class="language-name">Українська</span>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <main class="main">
+            <!-- Step 1: Input Section -->
+            <section id="input-section" class="section active">
+                <h2>Inizia</h2>
+                <div class="input-group">
+                    <label for="youtube-url">URL YouTube</label>
+                    <div class="url-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="youtube-url" 
+                            placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                            aria-label="URL YouTube"
+                        />
+                        <button id="fetch-transcript-btn" class="btn btn-primary">
+                            <span class="btn-text">Crea Quiz</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                    </div>
+                    <div class="error-message hidden" id="url-error"></div>
+                </div>
+
+                <!-- Language Selection -->
+                <div class="language-selection">
+                    <div class="input-group language-group-single">
+                        <label for="target-language">
+                            <span class="label-main">Lingua del Quiz e Riepilogo</span>
+                            <span class="label-hint">Scegli la lingua per domande e riepiloghi</span>
+                        </label>
+                        <select id="target-language" aria-label="Lingua del Quiz e Riepilogo">
+                            <option value="it">Italian (Italiano)</option>
+                            <option value="en">English</option>
+                            <option value="ar">Arabic (العربية)</option>
+                            <option value="bn">Bengali (বাংলা)</option>
+                            <option value="bg">Bulgarian (Български)</option>
+                            <option value="zh">Chinese (中文)</option>
+                            <option value="hr">Croatian (Hrvatski)</option>
+                            <option value="cs">Czech (Čeština)</option>
+                            <option value="da">Danish (Dansk)</option>
+                            <option value="nl">Dutch (Nederlands)</option>
+                            <option value="et">Estonian (Eesti)</option>
+                            <option value="fi">Finnish (Suomi)</option>
+                            <option value="fr">French (Français)</option>
+                            <option value="de">German (Deutsch)</option>
+                            <option value="el">Greek (Ελληνικά)</option>
+                            <option value="he">Hebrew (עברית)</option>
+                            <option value="hi">Hindi (हिन्दी)</option>
+                            <option value="hu">Hungarian (Magyar)</option>
+                            <option value="id">Indonesian (Bahasa Indonesia)</option>
+                            <option value="it">Italian (Italiano)</option>
+                            <option value="ja">Japanese (日本語)</option>
+                            <option value="ko">Korean (한국어)</option>
+                            <option value="lv">Latvian (Latviešu)</option>
+                            <option value="lt">Lithuanian (Lietuvių)</option>
+                            <option value="no">Norwegian (Norsk)</option>
+                            <option value="pl">Polish (Polski)</option>
+                            <option value="pt">Portuguese (Português)</option>
+                            <option value="ro">Romanian (Română)</option>
+                            <option value="ru">Russian (Русский)</option>
+                            <option value="sr">Serbian (Српски)</option>
+                            <option value="sk">Slovak (Slovenčina)</option>
+                            <option value="sl">Slovenian (Slovenščina)</option>
+                            <option value="es">Spanish (Español)</option>
+                            <option value="sw">Swahili (Kiswahili)</option>
+                            <option value="sv">Swedish (Svenska)</option>
+                            <option value="th">Thai (ไทย)</option>
+                            <option value="tr">Turkish (Türkçe)</option>
+                            <option value="uk">Ukrainian (Українська)</option>
+                            <option value="vi">Vietnamese (Tiếng Việt)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="divider">
+                    <span>OPPURE</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="manual-transcript">Incolla Trascrizione Manualmente</label>
+                    <textarea 
+                        id="manual-transcript" 
+                        rows="8" 
+                        placeholder="Incolla qui la tua trascrizione YouTube (i timestamp verranno puliti automaticamente)..."
+                        aria-label="Incolla Trascrizione Manualmente"
+                    ></textarea>
+                    <button id="process-manual-btn" class="btn btn-secondary">
+                        Elabora Trascrizione
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 2: Processing/Loading Section -->
+            <section id="processing-section" class="section hidden">
+                <div class="loading-state">
+                    <div class="spinner-large"></div>
+                    <h3>Elaborazione Contenuto Video</h3>
+                    <p id="processing-status">Analisi trascrizione...</p>
+                </div>
+            </section>
+
+            <!-- Step 3: Summary Section -->
+            <section id="summary-section" class="section hidden">
+                <h2>Riepilogo Video</h2>
+                <div class="video-info" id="video-info"></div>
+                <div class="summary-content" id="summary-content"></div>
+                <div class="action-buttons">
+                    <button id="start-quiz-btn" class="btn btn-primary">Inizia Quiz</button>
+                    <button id="view-transcript-btn" class="btn btn-secondary">Visualizza Trascrizione Completa</button>
+                </div>
+            </section>
+
+            <!-- Transcript Modal -->
+            <div id="transcript-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Trascrizione Completa</h3>
+                        <button class="close-btn" id="close-transcript-modal">&times;</button>
+                    </div>
+                    <div class="modal-body" id="transcript-modal-body"></div>
+                </div>
+            </div>
+
+            <!-- Step 4: Quiz Section -->
+            <section id="quiz-section" class="section hidden">
+                <div class="quiz-header">
+                    <h2>Quiz di Conoscenza</h2>
+                    <div class="quiz-progress">
+                        <span id="quiz-progress-text">Domanda 1 di 5</span>
+                    </div>
+                </div>
+                <div id="quiz-container"></div>
+            </section>
+
+            <!-- Step 5: Results Section -->
+            <section id="results-section" class="section hidden">
+                <div class="results-header">
+                    <h2>Risultati Quiz</h2>
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <span id="score-percentage">0%</span>
+                        </div>
+                        <p id="score-message">Ottimo lavoro!</p>
+                    </div>
+                </div>
+                <div id="results-details"></div>
+                <div class="action-buttons">
+                    <button id="retake-quiz-btn" class="btn btn-primary">Rifai Quiz</button>
+                    <button id="new-video-btn" class="btn btn-secondary">Analizza Nuovo Video</button>
+                </div>
+                <div class="history-section">
+                    <h3>Tentativi Precedenti</h3>
+                    <div id="attempt-history"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Costruito con ❤️ per un apprendimento migliore</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="language-dropdown.js"></script>
+</body>
+</html>
